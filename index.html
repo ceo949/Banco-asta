@@ -695,7 +695,7 @@ const PRESETS_B = {
 };
 const ALT_W_B = [1.0, 0.7, 0.45, 0.25];
 const KEYB = "bancoasta:v2";
-const VERSION_B = "2.2";
+const VERSION_B = "2.3";
 
 const clampB = (v,a,b) => Math.max(a, Math.min(b, v));
 const crB = x => Math.max(1, Math.round(x));
@@ -1137,6 +1137,28 @@ async function agentChatB(msg){
   return {risposta:risp};
 }
 
+async function testKeyB(){
+  if(!ST.api_key) return {errore:"Nessuna chiave salvata su questo dispositivo. Incollala qui sopra e premi Salva chiave."};
+  if(!navigator.onLine) return {errore:"Il dispositivo risulta offline: la chat richiede la rete."};
+  try{
+    const res = await fetch("https://api.anthropic.com/v1/messages",{method:"POST",
+      headers:{"content-type":"application/json","x-api-key":ST.api_key,
+        "anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},
+      body:JSON.stringify({model:"claude-sonnet-4-6",max_tokens:16,
+        messages:[{role:"user",content:"Rispondi solo: ok"}]})});
+    if(res.status===401) return {errore:"La chiave è stata rifiutata (401). Controlla di averla copiata per intero, senza spazi."};
+    if(res.status===429) return {errore:"Troppe richieste o credito esaurito (429). Controlla il credito sulla console Anthropic."};
+    if(!res.ok){ let t=""; try{ t=JSON.stringify(await res.json()).slice(0,160); }catch(e){}
+      return {errore:"L'API ha risposto "+res.status+". "+t}; }
+    const d = await res.json();
+    const txt = (d.content||[]).filter(x=>x.type==="text").map(x=>x.text).join(" ").trim();
+    return {ok:true, msg:"Tutto a posto: la chiave funziona e la risposta è arrivata ("+(txt||"vuota")+")."};
+  }catch(e){
+    return {errore:"La chiamata non è partita: "+((e&&e.message)||e)+
+      ". Di solito è assenza di rete o un blocco del browser."};
+  }
+}
+
 /* ---------------- ROUTER LOCALE ----------------
    Le viste chiamano api() esattamente come col server Python.  */
 async function api(path, body){
@@ -1169,6 +1191,7 @@ async function api(path, body){
       ST.formation = {modulo:body.modulo||"3-4-3", slots:body.slots||{}};
       saveB(); return {ok:true};
     case "/api/key": ST.api_key = (body.key||"").trim(); saveB(); return {ok:true};
+    case "/api/testkey": return await testKeyB();
     case "/api/import": return {n: importListoneB(body.text||"")};
     case "/api/chat":
       try{ return await agentChatB(body.msg||""); }
@@ -1616,7 +1639,10 @@ function viewFormato(){
   h+='<div class="card"><h3>Agenti e chat</h3>'+
   '<div style="font-size:12.5px;color:var(--mut);line-height:1.5;margin-bottom:9px">Asta, prezzi e formazione funzionano offline. Gli agenti e la chat richiedono una chiave API Anthropic, che resta su questo dispositivo.</div>'+
   '<input class="fld" id="apikey" type="password" placeholder="'+(S.has_key?'chiave salvata — sostituiscila se vuoi':'sk-ant-...')+'">'+
-  '<button class="btn ghost" style="margin-top:8px" onclick="saveKey()">Salva chiave</button></div>';
+  '<button class="btn ghost" style="margin-top:8px" onclick="saveKey()">Salva chiave</button>'+
+  '<button class="btn ghost" style="margin-top:8px" onclick="testKey()"'+(busy?' disabled':'')+'>'+
+  (busy==='key'?'<span class="spin"></span> sto provando…':'Prova la chiave e la connessione')+'</button>'+
+  '<div id="keymsg" style="font-size:12.5px;line-height:1.5;margin-top:9px"></div></div>';
   h+='<button class="btn" onclick="startAuction()">'+(S.ready?"Ricomincia l'asta con questo formato":"Apri l'asta")+'</button>';
   h+='</div></div>';
   return h;
@@ -1638,8 +1664,18 @@ function readCfg(){
 }
 async function saveCfg(){ readCfg(); await api("/api/config",{cfg:S.cfg,alloc:S.alloc,preset:S.preset}); }
 async function startAuction(){ await saveCfg(); await api("/api/start",{}); tab="asta"; alts=null; await refresh(); }
+async function testKey(){
+  busy="key"; render();
+  const r=await api("/api/testkey",{});
+  busy=""; render();
+  const el=$("#keymsg");
+  if(el) el.innerHTML = r.ok
+    ? '<span style="color:var(--mint)">✓ '+esc(r.msg)+'</span>'
+    : '<span style="color:var(--red)">✕ '+esc(r.errore)+'</span>';
+}
 async function saveKey(){ const k=$("#apikey").value.trim(); if(!k)return;
-  await api("/api/key",{key:k}); $("#apikey").value=""; S.has_key=true; alert("Chiave salvata su questo dispositivo."); }
+  await api("/api/key",{key:k}); $("#apikey").value=""; S.has_key=true; render();
+  const el=$("#keymsg"); if(el) el.innerHTML='<span style="color:var(--mut)">Chiave salvata. Ora premi «Prova la chiave e la connessione».</span>'; }
 async function doImport(){ const r=await api("/api/import",{text:$("#imp").value});
   $("#impmsg").textContent=r.n?r.n+" giocatori caricati.":"Non ho riconosciuto le colonne. Servono ruolo, nome, squadra e quotazione.";
   if(r.n) await refresh(); }

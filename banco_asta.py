@@ -11,7 +11,7 @@ Lo stato dell'asta si salva in asta_stato_v2.json accanto allo script.
 import json, os, re, sys, threading, webbrowser, urllib.request, urllib.error
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
-VERSION = "2.2"
+VERSION = "2.3"
 PORT = 8788
 HERE = os.path.dirname(os.path.abspath(__file__))
 STATE_FILE = os.path.join(HERE, "asta_stato_v2.json")
@@ -1155,6 +1155,25 @@ def agent_chat(msg):
     return {"risposta": risp}
 
 
+def test_key():
+    """Prova concreta: una chiamata minima all'API, per sapere cosa non va."""
+    if not STATE.get("api_key"):
+        return {"errore": "Nessuna chiave salvata. Incollala qui sopra e premi Salva chiave."}
+    try:
+        txt = call_claude("Rispondi solo: ok", [{"role": "user", "content": "ok"}], max_tokens=16)
+        return {"ok": True, "msg": "Tutto a posto: la chiave funziona e la risposta e' arrivata (%s)." % txt.strip()[:40]}
+    except urllib.error.HTTPError as e:
+        if e.code == 401:
+            return {"errore": "La chiave e' stata rifiutata (401). Controlla di averla copiata per intero."}
+        if e.code == 429:
+            return {"errore": "Troppe richieste o credito esaurito (429). Controlla il credito sulla console Anthropic."}
+        return {"errore": "L'API ha risposto %s." % e.code}
+    except urllib.error.URLError as e:
+        return {"errore": "Nessuna connessione: %s" % e.reason}
+    except Exception as e:
+        return {"errore": str(e)}
+
+
 def import_listone(text):
     out, k = [], 0
     for line in text.strip().split("\n"):
@@ -1794,7 +1813,10 @@ function viewFormato(){
   h+='<div class="card"><h3>Agenti e chat</h3>'+
   '<div style="font-size:12.5px;color:var(--mut);line-height:1.5;margin-bottom:9px">Asta, prezzi e formazione funzionano offline. Gli agenti e la chat richiedono una chiave API Anthropic, che resta su questo dispositivo.</div>'+
   '<input class="fld" id="apikey" type="password" placeholder="'+(S.has_key?'chiave salvata — sostituiscila se vuoi':'sk-ant-...')+'">'+
-  '<button class="btn ghost" style="margin-top:8px" onclick="saveKey()">Salva chiave</button></div>';
+  '<button class="btn ghost" style="margin-top:8px" onclick="saveKey()">Salva chiave</button>'+
+  '<button class="btn ghost" style="margin-top:8px" onclick="testKey()"'+(busy?' disabled':'')+'>'+
+  (busy==='key'?'<span class="spin"></span> sto provando…':'Prova la chiave e la connessione')+'</button>'+
+  '<div id="keymsg" style="font-size:12.5px;line-height:1.5;margin-top:9px"></div></div>';
   h+='<button class="btn" onclick="startAuction()">'+(S.ready?"Ricomincia l'asta con questo formato":"Apri l'asta")+'</button>';
   h+='</div></div>';
   return h;
@@ -1816,8 +1838,18 @@ function readCfg(){
 }
 async function saveCfg(){ readCfg(); await api("/api/config",{cfg:S.cfg,alloc:S.alloc,preset:S.preset}); }
 async function startAuction(){ await saveCfg(); await api("/api/start",{}); tab="asta"; alts=null; await refresh(); }
+async function testKey(){
+  busy="key"; render();
+  const r=await api("/api/testkey",{});
+  busy=""; render();
+  const el=$("#keymsg");
+  if(el) el.innerHTML = r.ok
+    ? '<span style="color:var(--mint)">✓ '+esc(r.msg)+'</span>'
+    : '<span style="color:var(--red)">✕ '+esc(r.errore)+'</span>';
+}
 async function saveKey(){ const k=$("#apikey").value.trim(); if(!k)return;
-  await api("/api/key",{key:k}); $("#apikey").value=""; S.has_key=true; alert("Chiave salvata su questo dispositivo."); }
+  await api("/api/key",{key:k}); $("#apikey").value=""; S.has_key=true; render();
+  const el=$("#keymsg"); if(el) el.innerHTML='<span style="color:var(--mut)">Chiave salvata. Ora premi «Prova la chiave e la connessione».</span>'; }
 async function doImport(){ const r=await api("/api/import",{text:$("#imp").value});
   $("#impmsg").textContent=r.n?r.n+" giocatori caricati.":"Non ho riconosciuto le colonne. Servono ruolo, nome, squadra e quotazione.";
   if(r.n) await refresh(); }
@@ -1918,6 +1950,8 @@ class Handler(BaseHTTPRequestHandler):
                     save_state(); out = {"ok": True}
                 elif path == "/api/key":
                     STATE["api_key"] = body.get("key", "").strip(); save_state(); out = {"ok": True}
+                elif path == "/api/testkey":
+                    out = test_key()
                 elif path == "/api/import":
                     out = {"n": import_listone(body.get("text", ""))}
                 elif path == "/api/chat":
