@@ -18,7 +18,8 @@ font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;-webki
 h1,h3{font-family:'Archivo Black','Arial Black',Impact,sans-serif;letter-spacing:-.02em;margin:0;text-transform:uppercase}
 .mono{font-family:ui-monospace,'SF Mono',Menlo,monospace;font-variant-numeric:tabular-nums}
 
-.shell{display:grid;grid-template-columns:370px 1fr;height:100vh;height:100dvh}
+.shell{display:grid;grid-template-columns:330px 1fr;height:100vh;height:100dvh}
+.shell.solo{grid-template-columns:1fr}   /* prima di aprire l'asta il listone non esiste */
 .side{border-right:1px solid var(--line);display:flex;flex-direction:column;min-height:0;background:#111922}
 .main{display:flex;flex-direction:column;min-height:0}
 .mainScroll{overflow:auto;padding:14px 18px 40px;flex:1}
@@ -117,6 +118,8 @@ border-radius:9px;padding:6px 9px;font-size:12px;margin:0 6px 6px 0;touch-action
 .spin{display:inline-block;width:12px;height:12px;border:2px solid var(--line);border-top-color:var(--rosa);
 border-radius:50%;animation:sp .7s linear infinite;vertical-align:middle}
 @keyframes sp{to{transform:rotate(360deg)}}
+.startBar{background:linear-gradient(90deg,rgba(242,167,179,.18),transparent);border:1px solid var(--rosa);
+border-radius:12px;padding:12px 14px;margin-bottom:12px;font-size:13.5px;line-height:1.5}
 .hide{display:none}
 </style></head><body>
 <div id="app">Carico…</div>
@@ -692,7 +695,7 @@ const PRESETS_B = {
 };
 const ALT_W_B = [1.0, 0.7, 0.45, 0.25];
 const KEYB = "bancoasta:v2";
-const VERSION_B = "2.1";
+const VERSION_B = "2.2";
 
 const clampB = (v,a,b) => Math.max(a, Math.min(b, v));
 const crB = x => Math.max(1, Math.round(x));
@@ -1115,13 +1118,19 @@ async function agentChatB(msg){
   const e = engineB();
   ST.chat = ST.chat || [];
   ST.chat.push({role:"user", content:msg});
-  const storia = ST.chat.filter(m=>m.role==="user"||m.role==="assistant").slice(-12);
+  saveB();                       // la domanda resta scritta comunque
+  // gli avvisi d'errore non fanno parte della conversazione da rimandare al modello
+  const storia = ST.chat.filter(m=>(m.role==="user"||m.role==="assistant") && !m.err).slice(-12);
   const contesto = "Stato dell'asta in questo momento:\n"+JSON.stringify(statoAstaB(e,true),null,1);
   const msgs = storia.slice(0,-1).map(m=>({role:m.role, content:m.content}))
     .concat([{role:"user", content:contesto+"\n\nDomanda: "+storia[storia.length-1].content}]);
   let risp;
   try{ risp = (await callClaudeB(SYS_CHAT_B, msgs, false, 900)).trim(); }
-  catch(err){ ST.chat.pop(); throw err; }
+  catch(err){
+    ST.chat.push({role:"assistant", content:"Non riesco a rispondere: "+err.message, err:true});
+    ST.chat = ST.chat.slice(-60); saveB();
+    return {errore: err.message};
+  }
   ST.chat.push({role:"assistant", content:risp});
   ST.chat = ST.chat.slice(-60);
   saveB();
@@ -1524,12 +1533,15 @@ async function askScout(news){ busy="scout"; render();
 function viewChat(){
   const msgs=S.chat||[];
   let h='<div class="chatWrap"><div class="chatList" id="chatList">';
+  if(!S.has_key) h+='<div class="warn hi">La chat e gli agenti richiedono una chiave API Anthropic: '+
+   'incollala in <b>Formato → Agenti e chat</b>. Senza chiave il resto dell\'app funziona lo stesso.</div>';
   if(!msgs.length) h+='<div class="card"><h3>Consulente d\'asta</h3>'+
    '<div style="font-size:13.5px;line-height:1.6;color:var(--mut)">Vede lo stato dell\'asta in tempo reale: crediti, rose, casse avversarie, fase. Chiedigli cose come:<br><br>'+
    '"Conviene puntare tutto su un attaccante da 150 o prenderne due da 70?"<br>'+
    '"Chi mi consigli come terzo portiere sotto i 5 crediti?"<br>'+
    '"Squadra 4 ha 300 crediti e solo gli attaccanti scoperti, come mi comporto?"</div></div>';
-  h+=msgs.map(m=>'<div class="msg '+(m.role==='user'?'u':'a')+'">'+esc(m.content)+'</div>').join("");
+  h+=msgs.map(m=>'<div class="msg '+(m.role==='user'?'u':'a')+'"'+
+   (m.err?' style="border-color:#5a2a2a;color:#FF9E9E"':'')+'>'+esc(m.content)+'</div>').join("");
   if(chatBusy) h+='<div class="msg a"><span class="spin"></span> sto guardando l\'asta…</div>';
   h+='</div><div class="row" style="margin-top:10px">'+
   '<textarea class="fld" id="chatIn" rows="2" placeholder="Chiedi qualcosa sull\'asta…" '+
@@ -1542,9 +1554,13 @@ async function sendChat(){
   const t=el.value.trim(); if(!t||chatBusy) return;
   el.value=""; chatBusy=true;
   S.chat=(S.chat||[]).concat([{role:"user",content:t}]); render();
-  try{ await api("/api/chat",{msg:t}); }
-  catch(e){ S.chat=S.chat.concat([{role:"assistant",content:"[errore] "+e.message}]); }
+  let err=null;
+  try{ const r=await api("/api/chat",{msg:t}); if(r&&r.errore) err=r.errore; }
+  catch(e){ err=(e&&e.message)||String(e); }
   chatBusy=false; await refresh();
+  if(err){ const cl=$("#chatList");
+    if(cl) cl.insertAdjacentHTML("beforeend",
+      '<div class="msg a" style="border-color:#5a2a2a;color:#FF9E9E">Non riesco a rispondere: '+esc(err)+'</div>'); }
   const cl=$("#chatList"); if(cl) cl.scrollTop=cl.scrollHeight;
 }
 
@@ -1561,7 +1577,9 @@ function allocBar(alloc,budget,spent){
 }
 function viewFormato(){
   const c=S.cfg,a=S.alloc;
-  let h='<div class="grid2"><div><div class="card"><h3>Formato della lega</h3>'+
+  let h='';
+  if(!S.ready) h+='<button class="btn" style="margin-bottom:12px" onclick="startAuction()">Apri l\'asta</button>';
+  h+='<div class="grid2"><div><div class="card"><h3>Formato della lega</h3>'+
   '<div class="row" style="margin-bottom:10px">'+
   '<div><span class="lbl">Partecipanti</span><input class="fld mono" id="f_teams" type="number" min="4" max="16" value="'+c.teams+'" onchange="readCfg();render()"></div>'+
   '<div><span class="lbl">Crediti</span><input class="fld mono" id="f_budget" type="number" min="100" step="50" value="'+c.budget+'"></div></div>'+
@@ -1630,19 +1648,23 @@ async function doImport(){ const r=await api("/api/import",{text:$("#imp").value
 function render(){
   if(!S){ return; }
   if(!S.ready) tab="formato";
-  const nav=[["asta","Asta"],["squadre","Squadre"],["mia","La mia squadra"],["strategia","Strategia"],["chat","Chat"],["formato","Formato"]];
+  const navAll=[["asta","Asta"],["squadre","Squadre"],["mia","La mia squadra"],["strategia","Strategia"],["chat","Chat"],["formato","Formato"]];
+  const nav = S.ready ? navAll : [["formato","Formato"]];
   const body = tab==="squadre"?viewSquadre() : tab==="mia"?viewMia() : tab==="strategia"?viewStrategia() :
                tab==="chat"?viewChat() : tab==="formato"?viewFormato() : viewAsta();
+  const start = S.ready ? '' :
+   '<div class="startBar"><b>Prima di cominciare:</b> controlla il formato della lega e i nomi dei partecipanti, '+
+   'poi premi <b>Apri l\'asta</b> in fondo alla pagina. Da quel momento compare il listone a sinistra e il resto del menu.</div>';
   $("#app").innerHTML =
-   '<div class="shell">'+
-   '<aside class="side'+(sideOpen?' open':'')+'">'+(S.ready?listone():'')+'</aside>'+
+   '<div class="shell'+(S.ready?'':' solo')+'">'+
+   (S.ready?'<aside class="side'+(sideOpen?' open':'')+'">'+listone()+'</aside>':'')+
    '<div class="main"><div class="topbar">'+
    '<div class="brand"><h1>Banco d\'asta</h1><span>v'+S.version+'</span></div>'+
-   '<button class="mini sideToggle" onclick="sideOpen=true;render()">Listone</button>'+
-   '<nav>'+nav.map(x=>'<button class="'+(tab===x[0]?'on':'')+'"'+(!S.ready&&x[0]!=='formato'?' disabled':'')+
+   (S.ready?'<button class="mini sideToggle" onclick="sideOpen=true;render()">Listone</button>':'')+
+   '<nav>'+nav.map(x=>'<button class="'+(tab===x[0]?'on':'')+'"'+
     ' onclick="go(\''+x[0]+'\')">'+x[1]+'</button>').join("")+'</nav>'+
    (S.ready?'<div class="cash"><b>'+S.parts[0].credits+'</b><small>crediti · '+S.my_slots_left+' slot</small></div>':'')+
-   '</div><div class="mainScroll">'+body+'</div></div></div>';
+   '</div><div class="mainScroll">'+start+body+'</div></div></div>';
   if(tab==="mia") initDrag();
   if(tab==="chat"){ const cl=$("#chatList"); if(cl) cl.scrollTop=cl.scrollHeight; }
 }
