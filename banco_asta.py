@@ -11,7 +11,7 @@ Lo stato dell'asta si salva in asta_stato_v2.json accanto allo script.
 import json, os, re, sys, threading, webbrowser, urllib.request, urllib.error
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
-VERSION = "2.3"
+VERSION = "2.4"
 PORT = 8788
 HERE = os.path.dirname(os.path.abspath(__file__))
 STATE_FILE = os.path.join(HERE, "asta_stato_v2.json")
@@ -639,6 +639,7 @@ def default_state():
         "parts": None,
         "formation": {"modulo": "3-4-3", "slots": {}},
         "chat": [],
+        "note": "",
         "api_key": "",
     }
 
@@ -997,7 +998,8 @@ def snapshot():
         "role_spent": {r: int(round(e.role_spent[r])) for r in ROLES},
         "phase": phase_suggested(e), "alerts": alerts(e), "pagelle": pagelle(e),
         "formation": st.get("formation", {"modulo": "3-4-3", "slots": {}}),
-        "moduli": MODULI, "chat": st.get("chat", [])[-40:], "n_players": len(st["players"]),
+        "moduli": MODULI, "chat": st.get("chat", [])[-40:], "note": st.get("note", ""),
+        "n_players": len(st["players"]),
         "venduti": len(st["sold"]),
     }
 
@@ -1726,24 +1728,102 @@ async function askScout(news){ busy="scout"; render();
   try{ scout=await api("/api/agent",{kind:"scout",id:cur.id,news:!!news}); }catch(e){ scout={errore:e.message,player:cur.id}; }
   busy=""; render(); }
 
-/* ---------------- CHAT ---------------- */
+/* ---------------- CONSULENTE (ponte con Claude + chat API) ---------------- */
+const TITW={3:"titolare",2:"ballottaggio",1:"riserva"};
+
+function istruzioni(){
+  const c=S.cfg;
+  return "Sei il mio consulente d'asta al fantacalcio, seduto accanto a me mentre l'asta e' in corso.\n"+
+  "Lega Classic da "+c.teams+" squadre, "+c.budget+" crediti, rosa "+c.slots.P+" portieri "+c.slots.D+
+  " difensori "+c.slots.C+" centrocampisti "+c.slots.A+" attaccanti"+
+  (c.mod_difesa?", modificatore di difesa attivo":"")+". Si compra per ruoli in ordine: portieri, difensori, centrocampisti, attaccanti.\n\n"+
+  "Sei specializzato in fantacalcio italiano: quotazioni, fantamedia, rigoristi, calci piazzati, modificatore di difesa, "+
+  "ballottaggi, turnover da coppe, rischio infortuni, e dinamiche d'asta: inflazione, scarsita' di ruolo, il valore di restare "+
+  "liquidi, il rischio di arrivare a fine asta con crediti inutilizzati.\n\n"+
+  "Ti passero' lo stato dell'asta in forma sintetica. Rispondi breve e diretto, due o tre frasi, con una cifra massima concreta "+
+  "e il motivo in una riga. Se sto per fare una sciocchezza dimmelo. Se una cosa non la sai, un infortunio dell'ultima ora, "+
+  "dillo invece di inventarla.";
+}
+function quadro(){
+  const c=S.cfg, me=S.parts[0];
+  const rosa=(S.rose["0"]||[]).map(p=>p.r+" "+p.nome+" ("+p.team+") pagato "+p.price).join("; ")||"ancora nessuno";
+  const avv=S.caps.slice(1).map(x=>"- "+x.name+": "+x.credits+" crediti, ruoli scoperti "+
+    (x.scoperti.length?x.scoperti.join(""):"nessuno")).join("\n");
+  const liberi=S.players.filter(p=>p.buyer===undefined&&p.r===S.phase).slice(0,10)
+    .map(p=>p.nome+" ("+p.team+", "+TITW[p.t]+") prezzo "+p.base+" max "+p.max).join("\n  ");
+  let t="QUADRO ASTA - fase "+RN[S.phase]+"\n\n";
+  t+="MIA SQUADRA: "+me.credits+" crediti, "+S.my_slots_left+" slot liberi ("+
+    R.map(r=>r+" "+(me.filled[r]||0)+"/"+c.slots[r]).join(", ")+")\n";
+  t+="Rosa: "+rosa+"\n";
+  t+="Strategia crediti per ruolo: "+R.map(r=>r+" "+S.role_spent[r]+"/"+S.role_budget[r]).join(", ")+"\n\n";
+  t+="AVVERSARI:\n"+avv+"\n\n";
+  if(S.alerts&&S.alerts.length) t+="AVVISI:\n"+S.alerts.map(a=>"- "+a.txt).join("\n")+"\n\n";
+  if(cur&&ev) t+="SUL BANCO ORA: "+cur.nome+" ("+cur.team+", "+ev.tit_label+"), prezzo di mercato "+ev.base+
+    ", mio massimo calcolato "+ev.max+". Rivale piu' ricco su quel ruolo: "+
+    (ev.top_rival_name||"nessuno")+" fino a "+ev.top_rival+".\n\n";
+  t+="MIGLIORI LIBERI IN QUESTA FASE:\n  "+liberi+"\n";
+  return t;
+}
+function copia(testo, id){
+  const done=()=>{ const el=document.getElementById(id); if(el){ const old=el.textContent;
+    el.textContent="copiato ✓"; setTimeout(()=>{el.textContent=old;},1600);} };
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(testo).then(done, ()=>fallback(testo,done));
+  } else fallback(testo,done);
+}
+function fallback(t,done){
+  const ta=document.createElement("textarea");
+  ta.value=t; ta.style.position="fixed"; ta.style.top="-1000px";
+  document.body.appendChild(ta); ta.focus(); ta.select();
+  try{ document.execCommand("copy"); done(); }catch(e){ alert("Copia manualmente il testo dal riquadro."); }
+  ta.remove();
+}
+async function salvaNote(){
+  const el=$("#note"); if(!el) return;
+  await api("/api/note",{note:el.value});
+  const b=document.getElementById("noteMsg"); if(b){ b.textContent="salvato ✓"; setTimeout(()=>b.textContent="",1600); }
+}
+
 function viewChat(){
   const msgs=S.chat||[];
-  let h='<div class="chatWrap"><div class="chatList" id="chatList">';
-  if(!S.has_key) h+='<div class="warn hi">La chat e gli agenti richiedono una chiave API Anthropic: '+
-   'incollala in <b>Formato → Agenti e chat</b>. Senza chiave il resto dell\'app funziona lo stesso.</div>';
-  if(!msgs.length) h+='<div class="card"><h3>Consulente d\'asta</h3>'+
-   '<div style="font-size:13.5px;line-height:1.6;color:var(--mut)">Vede lo stato dell\'asta in tempo reale: crediti, rose, casse avversarie, fase. Chiedigli cose come:<br><br>'+
-   '"Conviene puntare tutto su un attaccante da 150 o prenderne due da 70?"<br>'+
-   '"Chi mi consigli come terzo portiere sotto i 5 crediti?"<br>'+
-   '"Squadra 4 ha 300 crediti e solo gli attaccanti scoperti, come mi comporto?"</div></div>';
-  h+=msgs.map(m=>'<div class="msg '+(m.role==='user'?'u':'a')+'"'+
-   (m.err?' style="border-color:#5a2a2a;color:#FF9E9E"':'')+'>'+esc(m.content)+'</div>').join("");
-  if(chatBusy) h+='<div class="msg a"><span class="spin"></span> sto guardando l\'asta…</div>';
-  h+='</div><div class="row" style="margin-top:10px">'+
-  '<textarea class="fld" id="chatIn" rows="2" placeholder="Chiedi qualcosa sull\'asta…" '+
-  'onkeydown="if(event.key===\'Enter\'&&!event.shiftKey){event.preventDefault();sendChat()}"></textarea>'+
-  '<button class="btn" style="max-width:110px" onclick="sendChat()"'+(chatBusy?' disabled':'')+'>Invia</button></div></div>';
+  let h='<div class="grid2"><div>';
+  h+='<div class="card"><h3>Il ponte con Claude</h3>'+
+   '<div style="font-size:13px;color:var(--mut);line-height:1.55;margin-bottom:10px">'+
+   'Se non usi la chiave API, il consulente lo fai girare nell\'app di Claude sul telefono. '+
+   'Qui l\'app prepara i testi da incollare: le istruzioni una volta sola, il quadro dell\'asta ogni volta che serve.</div>'+
+   '<button class="btn ghost" style="margin-bottom:8px" onclick="copia(istruzioni(),\'c1\')">'+
+   '<span id="c1">Copia le istruzioni iniziali</span></button>'+
+   '<button class="btn" onclick="copia(quadro(),\'c2\')"><span id="c2">Copia il quadro dell\'asta adesso</span></button>'+
+   '<div style="font-size:12px;color:var(--mut);margin-top:9px;line-height:1.5">'+
+   'Le istruzioni si incollano una volta sola, all\'inizio della conversazione. Poi, a ogni domanda, incolla il quadro '+
+   'e aggiungi in fondo cosa vuoi sapere.</div></div>';
+  h+='<div class="card"><h3>Anteprima del quadro</h3>'+
+   '<pre style="white-space:pre-wrap;font-family:ui-monospace,Menlo,monospace;font-size:11.5px;line-height:1.5;'+
+   'color:var(--mut);margin:0;max-height:340px;overflow:auto">'+esc(quadro())+'</pre></div>';
+  h+='</div><div>';
+  h+='<div class="card"><h3>Appunti</h3>'+
+   '<div style="font-size:12.5px;color:var(--mut);margin-bottom:8px">Incolla qui le risposte che ti servono durante l\'asta: '+
+   'restano salvate con l\'asta e le rileggi anche offline.</div>'+
+   '<textarea class="fld" id="note" rows="8" oninput="clearTimeout(window.__nt);window.__nt=setTimeout(salvaNote,700)">'+
+   esc(S.note||"")+'</textarea>'+
+   '<div id="noteMsg" style="font-size:12px;color:var(--mint);margin-top:6px;height:16px"></div></div>';
+  // chat via API, solo se c'e' la chiave
+  if(S.has_key){
+    h+='<div class="card"><h3>Chat integrata</h3><div class="chatList" id="chatList" style="max-height:40vh">';
+    h+=msgs.map(m=>'<div class="msg '+(m.role==='user'?'u':'a')+'"'+
+      (m.err?' style="border-color:#5a2a2a;color:#FF9E9E"':'')+'>'+esc(m.content)+'</div>').join("");
+    if(chatBusy) h+='<div class="msg a"><span class="spin"></span> sto guardando l\'asta…</div>';
+    h+='</div><div class="row" style="margin-top:10px">'+
+     '<textarea class="fld" id="chatIn" rows="2" placeholder="Chiedi qualcosa sull\'asta…" '+
+     'onkeydown="if(event.key===\'Enter\'&&!event.shiftKey){event.preventDefault();sendChat()}"></textarea>'+
+     '<button class="btn" style="max-width:100px" onclick="sendChat()"'+(chatBusy?' disabled':'')+'>Invia</button></div></div>';
+  } else {
+    h+='<div class="card"><h3>Chat integrata</h3>'+
+     '<div style="font-size:12.5px;color:var(--mut);line-height:1.55">Spenta: richiede una chiave API Anthropic, '+
+     'che si paga a consumo ed e\' separata dall\'abbonamento a Claude. Il ponte qui accanto fa lo stesso lavoro '+
+     'passando dall\'app di Claude. Se un giorno vuoi accenderla, la chiave si incolla in Formato.</div></div>';
+  }
+  h+='</div></div>';
   return h;
 }
 async function sendChat(){
@@ -1758,7 +1838,6 @@ async function sendChat(){
   if(err){ const cl=$("#chatList");
     if(cl) cl.insertAdjacentHTML("beforeend",
       '<div class="msg a" style="border-color:#5a2a2a;color:#FF9E9E">Non riesco a rispondere: '+esc(err)+'</div>'); }
-  const cl=$("#chatList"); if(cl) cl.scrollTop=cl.scrollHeight;
 }
 
 /* ---------------- FORMATO ---------------- */
@@ -1858,7 +1937,7 @@ async function doImport(){ const r=await api("/api/import",{text:$("#imp").value
 function render(){
   if(!S){ return; }
   if(!S.ready) tab="formato";
-  const navAll=[["asta","Asta"],["squadre","Squadre"],["mia","La mia squadra"],["strategia","Strategia"],["chat","Chat"],["formato","Formato"]];
+  const navAll=[["asta","Asta"],["squadre","Squadre"],["mia","La mia squadra"],["strategia","Strategia"],["chat","Consulente"],["formato","Formato"]];
   const nav = S.ready ? navAll : [["formato","Formato"]];
   const body = tab==="squadre"?viewSquadre() : tab==="mia"?viewMia() : tab==="strategia"?viewStrategia() :
                tab==="chat"?viewChat() : tab==="formato"?viewFormato() : viewAsta();
@@ -1950,6 +2029,9 @@ class Handler(BaseHTTPRequestHandler):
                     save_state(); out = {"ok": True}
                 elif path == "/api/key":
                     STATE["api_key"] = body.get("key", "").strip(); save_state(); out = {"ok": True}
+                elif path == "/api/note":
+                    STATE["note"] = body.get("note", "")
+                    save_state(); out = {"ok": True}
                 elif path == "/api/testkey":
                     out = test_key()
                 elif path == "/api/import":
