@@ -18,18 +18,19 @@ font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;-webki
 h1,h3{font-family:'Archivo Black','Arial Black',Impact,sans-serif;letter-spacing:-.02em;margin:0;text-transform:uppercase}
 .mono{font-family:ui-monospace,'SF Mono',Menlo,monospace;font-variant-numeric:tabular-nums}
 
-.shell{display:grid;grid-template-columns:330px 1fr;height:100vh;height:100dvh}
+.shell{display:grid;grid-template-columns:330px minmax(0,1fr);height:100vh;height:100dvh;max-width:100vw;overflow:hidden}
 .shell.solo{grid-template-columns:1fr}   /* prima di aprire l'asta il listone non esiste */
-.side{border-right:1px solid var(--line);display:flex;flex-direction:column;min-height:0;background:#111922}
-.main{display:flex;flex-direction:column;min-height:0}
-.mainScroll{overflow:auto;padding:14px 18px 40px;flex:1}
+.side{border-right:1px solid var(--line);display:flex;flex-direction:column;min-height:0;min-width:0;background:#111922}
+.main{display:flex;flex-direction:column;min-height:0;min-width:0}
+.mainScroll{overflow-y:auto;overflow-x:hidden;padding:14px 18px 40px;flex:1;min-width:0}
 @media(max-width:900px){.shell{grid-template-columns:1fr}
  .side{position:fixed;inset:0;z-index:50;display:none}.side.open{display:flex}
  .sideToggle{display:inline-flex!important}}
 .sideToggle{display:none}
 
-.sHead{padding:calc(10px + env(safe-area-inset-top)) 14px 10px;border-bottom:1px solid var(--line)}
-.sList{overflow:auto;flex:1;padding:0 14px 30px}
+.sHead{padding:calc(10px + env(safe-area-inset-top)) 14px 10px;border-bottom:1px solid var(--line);min-width:0}
+.sHead .pill{white-space:nowrap}
+.sList{overflow-y:auto;overflow-x:hidden;flex:1;padding:0 14px 30px;min-width:0}
 .topbar{display:flex;align-items:center;gap:12px;padding:calc(10px + env(safe-area-inset-top)) 18px 10px;
 border-bottom:1px solid var(--line);flex-wrap:wrap}
 .brand{display:flex;align-items:baseline;gap:8px}.brand h1{font-size:17px}
@@ -43,7 +44,11 @@ nav button.on{background:var(--rosa);border-color:var(--rosa);color:#12181D}
 
 .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:12px}
 .card h3{font-size:12px;letter-spacing:.1em;color:var(--rosa);margin-bottom:10px}
-.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:12px;align-items:start}
+.grid2>*{min-width:0}          /* senza questo una colonna larga sfonda la griglia */
+.card,.block{max-width:100%;overflow-wrap:anywhere}
+.btn,.mini{white-space:normal}  /* le etichette lunghe vanno a capo, non deborda il pulsante */
+pre{max-width:100%;overflow-x:auto}
 .lbl{font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--mut);display:block;margin-bottom:5px}
 .fld{width:100%;background:var(--panel2);border:1px solid var(--line);color:var(--cream);border-radius:9px;
 padding:9px 11px;font-size:16px;font-family:inherit}
@@ -695,7 +700,7 @@ const PRESETS_B = {
 };
 const ALT_W_B = [1.0, 0.7, 0.45, 0.25];
 const KEYB = "bancoasta:v2";
-const VERSION_B = "2.4";
+const VERSION_B = "2.5";
 
 const clampB = (v,a,b) => Math.max(a, Math.min(b, v));
 const crB = x => Math.max(1, Math.round(x));
@@ -1616,15 +1621,18 @@ function viewChat(){
    '<div style="font-size:13px;color:var(--mut);line-height:1.55;margin-bottom:10px">'+
    'Se non usi la chiave API, il consulente lo fai girare nell\'app di Claude sul telefono. '+
    'Qui l\'app prepara i testi da incollare: le istruzioni una volta sola, il quadro dell\'asta ogni volta che serve.</div>'+
-   '<button class="btn ghost" style="margin-bottom:8px" onclick="copia(istruzioni(),\'c1\')">'+
+   '<div style="display:flex;gap:8px;flex-wrap:wrap">'+
+   '<button class="btn ghost" style="flex:1 1 200px" onclick="copia(istruzioni(),\'c1\')">'+
    '<span id="c1">Copia le istruzioni iniziali</span></button>'+
-   '<button class="btn" onclick="copia(quadro(),\'c2\')"><span id="c2">Copia il quadro dell\'asta adesso</span></button>'+
+   '<button class="btn" style="flex:1 1 200px" onclick="copia(quadro(),\'c2\')">'+
+   '<span id="c2">Copia il quadro adesso</span></button></div>'+
    '<div style="font-size:12px;color:var(--mut);margin-top:9px;line-height:1.5">'+
    'Le istruzioni si incollano una volta sola, all\'inizio della conversazione. Poi, a ogni domanda, incolla il quadro '+
    'e aggiungi in fondo cosa vuoi sapere.</div></div>';
   h+='<div class="card"><h3>Anteprima del quadro</h3>'+
-   '<pre style="white-space:pre-wrap;font-family:ui-monospace,Menlo,monospace;font-size:11.5px;line-height:1.5;'+
-   'color:var(--mut);margin:0;max-height:340px;overflow:auto">'+esc(quadro())+'</pre></div>';
+   '<pre style="white-space:pre-wrap;word-break:break-word;font-family:ui-monospace,Menlo,monospace;'+
+   'font-size:11.5px;line-height:1.5;color:var(--mut);margin:0;max-height:46vh;overflow:auto">'+
+   esc(quadro())+'</pre></div>';
   h+='</div><div>';
   h+='<div class="card"><h3>Appunti</h3>'+
    '<div style="font-size:12.5px;color:var(--mut);margin-bottom:8px">Incolla qui le risposte che ti servono durante l\'asta: '+
