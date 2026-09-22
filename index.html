@@ -142,32 +142,31 @@ window.addEventListener("unhandledrejection",function(e){window.__boom("Promessa
    Sostituisce il server Python: stesse rotte, stesse risposte,
    ma tutto gira dentro Safari. Nessuna rete richiesta.
    ============================================================ */
-const RAWL = `P|Svilar|Roma|19|85|3
-P|Vicario|Juventus|17|70|3
-P|Martinez Jo.|Inter|17|68|3
-P|Carnesecchi|Atalanta|17|55|3
-P|Maignan|Milan|15|52|3
-P|Butez|Como|15|50|3
-P|Meret|Napoli|11|48|3
-P|Mandas|Lazio|10|36|3
-P|Skorupski|Bologna|10|32|3
-P|De Gea|Fiorentina|11|30|3
-P|Okoye|Udinese|9|28|3
-P|Falcone|Lecce|8|26|3
-P|Perri|Torino|9|26|3
-P|Caprile|Cagliari|10|25|3
-P|Sanchez Ro.|Como|8|25|2
-P|Bijlow|Genoa|8|15|3
-P|Muric|Sassuolo|7|15|3
-P|Palmisani|Frosinone|5|12|3
-P|Stankovic F.|Venezia|6|11|3
-P|Tornqvist|Monza|1|10|3
-P|Corvi|Parma|2|10|3
-P|Daffara|Parma|6|7|2
-P|Provedel|Inter|2|5|2
-P|Thiam|Monza|4|5|2
-P|Milinkovic-Savic V.|Napoli|5|5|2
-P|Mascardi|Torino|1|5|2
+const RAWL = `P|Svilar|Roma|19|90|3
+P|Vicario|Juventus|16|65|3
+P|Martinez Jo.|Inter|14|63|3
+P|Carnesecchi|Atalanta|16|56|3
+P|Maignan|Milan|15|54|3
+P|Butez|Como|13|43|3
+P|Mandas|Lazio|13|41|3
+P|Meret|Napoli|9|40|3
+P|Caprile|Cagliari|13|30|3
+P|De Gea|Fiorentina|10|25|3
+P|Okoye|Udinese|8|25|3
+P|Skorupski|Bologna|9|23|3
+P|Falcone|Lecce|7|23|3
+P|Palmisani|Frosinone|9|21|3
+P|Perri|Torino|9|16|3
+P|Milinkovic-Savic V.|Napoli|7|13|2
+P|Sanchez Ro.|Como|8|12|2
+P|Bijlow|Genoa|6|11|3
+P|Corvi|Parma|4|10|3
+P|Muric|Sassuolo|5|10|3
+P|Tornqvist|Monza|3|8|3
+P|Stankovic F.|Venezia|5|8|3
+P|Provedel|Inter|1|5|2
+P|Thiam|Monza|3|3|2
+P|Daffara|Parma|5|2|2
 P|Sportiello|Atalanta|1|1|2
 P|Pompei|Atalanta|1|1|1
 P|Happonen|Bologna|1|1|2
@@ -177,7 +176,7 @@ P|Radunovic|Cagliari|1|1|1
 P|Vigorito|Como|1|1|1
 P|Christensen O.|Fiorentina|1|1|2
 P|Lezzerini|Fiorentina|1|1|1
-P|Desplanches|Frosinone|2|1|2
+P|Desplanches|Frosinone|1|1|2
 P|Lolic|Frosinone|1|1|1
 P|Pisseri|Frosinone|1|1|1
 P|Sommariva|Genoa|1|1|2
@@ -199,188 +198,189 @@ P|Gollini|Roma|1|1|1
 P|Russo A.|Sassuolo|1|1|2
 P|Turati|Sassuolo|1|1|1
 P|Satalino|Sassuolo|1|1|1
-P|Paleari|Torino|1|1|1
+P|Mascardi|Torino|1|1|2
 P|Siviero|Torino|1|1|1
 P|Padelli|Udinese|1|1|2
-P|Piana|Udinese|1|1|1
 P|Mrozek|Udinese|1|1|1
 P|Grandi|Venezia|1|1|2
 P|Pozzi|Venezia|1|1|1
 P|Montipo|Venezia|1|1|1
-D|Dimarco|Inter|31|240|3
-D|Wesley|Roma|18|87|3
-D|Molina N.|Roma|18|78|3
-D|Bremer|Juventus|16|60|3
-D|Rrahmani|Napoli|15|51|3
-D|Mancini|Roma|16|50|3
-D|Pavlovic|Milan|14|49|3
-D|Akanji|Inter|15|47|3
-D|Kalulu|Juventus|14|47|3
-D|Solet|Udinese|13|46|3
-D|Bastoni|Inter|14|43|3
-D|N'Dicka|Roma|13|42|3
-D|Ostigard|Genoa|11|41|3
-D|Di Lorenzo|Napoli|12|39|3
-D|Spence|Inter|11|37|3
-D|Bisseck|Inter|12|36|2
-D|Chalobah T.|Como|10|32|3
-D|Ramon|Como|10|31|3
-D|Gila|Milan|13|31|3
-D|Vasquez|Genoa|9|30|3
-D|Scalvini|Atalanta|10|28|3
-D|Diego Carlos|Parma|8|26|3
-D|Hermoso|Roma|11|26|2
-D|Couto|Como|8|25|3
-D|Stones|Inter|12|25|2
-D|Tavares N.|Lazio|7|25|3
-D|Spinazzola|Napoli|8|25|3
-D|Miranda J.|Bologna|8|23|3
-D|Bartesaghi|Milan|8|22|3
-D|Valeri|Parma|8|22|3
-D|Valle|Como|6|21|3
+D|Dimarco|Inter|29|210|3
+D|Wesley|Roma|18|93|3
+D|Bremer|Juventus|17|80|3
+D|Molina N.|Roma|17|65|3
+D|Mancini|Roma|15|54|3
+D|Rrahmani|Napoli|15|53|3
+D|Pavlovic|Milan|13|50|3
+D|Tavares N.|Lazio|9|45|3
+D|Akanji|Inter|14|41|3
+D|Kalulu|Juventus|13|41|3
+D|Bastoni|Inter|13|40|3
+D|Di Lorenzo|Napoli|12|37|3
+D|Hermoso|Roma|12|35|3
+D|Ramon|Como|12|34|3
+D|Bisseck|Inter|13|34|3
+D|N'Dicka|Roma|11|32|2
+D|Jimenez A.|Fiorentina|10|30|3
+D|Gila|Milan|13|30|3
+D|Solet|Udinese|12|30|3
+D|Couto|Como|8|29|3
+D|Vasquez|Genoa|9|28|3
+D|Carlos Augusto|Inter|10|27|2
+D|Ostigard|Genoa|10|26|3
+D|Chalobah T.|Como|9|25|3
+D|Mangas|Monza|10|25|3
+D|Scalvini|Atalanta|10|23|3
+D|De Winter|Milan|6|23|3
+D|Miranda J.|Bologna|10|22|3
+D|Tiago Gabriel|Lecce|9|22|3
+D|Valeri|Parma|9|22|3
+D|Spinazzola|Napoli|8|21|3
 D|Delprato|Parma|8|21|3
-D|Kristensen T.|Atalanta|6|20|3
 D|Theate|Bologna|8|20|3
-D|Mina|Cagliari|7|20|3
-D|Dodo|Fiorentina|9|20|3
-D|Dragusin|Fiorentina|7|20|3
-D|Carlos Augusto|Inter|6|20|2
-D|Marusic|Lazio|6|20|3
-D|Romagnoli|Lazio|6|20|3
-D|Tiago Gabriel|Lecce|8|20|3
-D|De Winter|Milan|5|20|3
-D|Belghali|Torino|7|20|3
-D|Zappacosta|Atalanta|8|19|3
-D|Zortea|Bologna|7|19|3
-D|Sutalo J.|Lazio|7|19|3
-D|Idzes|Sassuolo|7|19|3
-D|Vojvoda|Udinese|9|19|3
-D|Bernasconi|Atalanta|6|18|3
-D|Jimenez A.|Fiorentina|7|18|3
-D|Cambiaso|Juventus|8|18|3
-D|Badiashile|Napoli|7|18|3
-D|Bellanova|Atalanta|6|17|2
-D|Lucumi|Juventus|7|17|3
-D|Valdepenas|Fiorentina|5|16|3
-D|Celik|Juventus|8|16|2
-D|Doekhi|Lazio|8|16|2
-D|Heggem|Bologna|6|15|3
-D|Obert|Cagliari|7|15|3
-D|Sugawara|Cagliari|6|15|3
-D|Bracaglia|Frosinone|7|15|3
-D|Gabbia|Milan|7|15|2
-D|Mangas|Monza|7|15|3
-D|Buongiorno|Napoli|6|15|2
-D|Koulierakis|Roma|8|15|2
-D|Caleta-Car|Sassuolo|6|15|3
-D|Rodriguez Ju.|Cagliari|4|14|3
-D|Marcandalli|Genoa|6|14|3
-D|Pavard|Inter|6|14|1
-D|Pedraza|Lazio|6|14|2
-D|Kouadio|Monza|3|14|3
-D|Troilo|Parma|3|14|3
-D|Rensch|Roma|4|14|2
-D|Coco|Torino|7|14|3
-D|Holm|Bologna|6|13|2
-D|Ze Pedro|Cagliari|5|13|2
-D|Kaiki|Como|6|13|2
-D|Kempf|Como|5|13|2
-D|Monterisi|Frosinone|6|13|3
-D|Calvani|Frosinone|5|13|3
-D|Provstgaard|Lazio|4|13|2
-D|Estupinan|Milan|3|13|2
-D|Olivera|Napoli|5|13|2
-D|Obrador|Sassuolo|6|13|3
-D|Comuzzo|Torino|8|13|3
-D|Ismajli|Torino|7|13|3
-D|Bella-Kotchap|Venezia|5|13|3
-D|Kossounou|Atalanta|4|12|2
-D|Helland|Bologna|3|12|2
-D|Viery|Fiorentina|6|12|2
-D|Joao Mario|Fiorentina|3|12|2
-D|Kelly L.|Juventus|5|12|2
+D|Valle|Como|8|20|3
+D|Sutalo J.|Lazio|7|20|3
+D|Dragusin|Fiorentina|8|19|3
+D|Lucumi|Juventus|8|18|3
+D|Celik|Juventus|8|18|3
+D|Balerdi|Roma|8|18|2
+D|Vojvoda|Udinese|8|18|3
+D|Zortea|Bologna|6|17|3
+D|Mina|Cagliari|9|17|3
+D|Kaiki|Como|9|17|2
+D|Bracaglia|Frosinone|9|17|3
+D|Spence|Inter|10|17|2
+D|Bellanova|Atalanta|5|16|3
+D|Marusic|Lazio|5|16|3
+D|Favasuli|Napoli|6|16|3
+D|Diego Carlos|Parma|8|16|3
+D|Ze Pedro|Cagliari|8|15|3
+D|Obert|Cagliari|8|15|3
+D|Kamara H.|Udinese|10|15|3
+D|Bernasconi|Atalanta|5|14|3
+D|Zappacosta|Atalanta|7|14|3
+D|Kristensen T.|Atalanta|5|14|2
+D|Heggem|Bologna|5|14|3
+D|Rodriguez Ju.|Cagliari|6|14|3
+D|Stones|Inter|11|14|2
+D|Kouadio|Monza|4|14|3
+D|Troilo|Parma|4|14|3
+D|Idzes|Sassuolo|7|14|3
+D|Coco|Torino|8|14|3
+D|Abankwah|Udinese|7|14|3
+D|Viery|Fiorentina|5|13|3
+D|Calvani|Frosinone|8|13|3
+D|Doekhi|Lazio|8|13|3
+D|Estupinan|Milan|4|13|3
+D|Birindelli|Monza|7|13|3
+D|Marin R.|Napoli|2|13|2
+D|Rensch|Roma|4|13|2
+D|Comert|Torino|6|13|3
+D|Belghali|Torino|7|13|3
+D|Kossounou|Atalanta|3|12|2
+D|Helland|Bologna|5|12|2
+D|Joao Mario|Fiorentina|2|12|3
+D|Monterisi|Frosinone|7|12|3
+D|Marcandalli|Genoa|5|12|3
+D|Pavard|Inter|5|12|1
+D|Kelly L.|Juventus|4|12|2
+D|Provstgaard|Lazio|5|12|2
 D|Veiga D.|Lecce|6|12|3
 D|Gallo|Lecce|6|12|3
-D|Gaspar K.|Lecce|5|12|3
+D|Gaspar K.|Lecce|4|12|3
 D|Siebert|Lecce|4|12|2
-D|Birindelli|Monza|4|12|3
-D|Beukema|Napoli|6|12|2
-D|Leysen F.|Sassuolo|6|12|3
+D|Bartesaghi|Milan|7|12|2
+D|Lucchesi|Monza|4|12|3
+D|Britschgi|Parma|4|12|2
+D|Doig|Sassuolo|8|12|3
+D|Leysen F.|Sassuolo|8|12|3
+D|Ismajli|Torino|7|12|3
 D|Fortini|Torino|6|12|2
-D|Patterson|Torino|5|12|2
-D|Comert|Torino|4|12|2
-D|Kamara H.|Udinese|9|12|3
-D|Kabasele|Udinese|4|12|3
-D|Correia T.|Venezia|5|12|3
-D|Hainaut|Venezia|4|12|3
-D|Hien|Atalanta|7|11|2
-D|Lucchesi|Monza|3|11|3
-D|Favasuli|Napoli|4|11|1
-D|Balerdi|Roma|6|11|1
-D|Van Der Brempt|Sassuolo|2|11|2
-D|Palma|Udinese|3|11|2
-D|Vitik|Bologna|4|10|2
-D|Smolcic I.|Como|4|10|2
+D|Hainaut|Venezia|8|12|3
+D|Kolasinac|Atalanta|6|11|2
+D|Holm|Bologna|6|11|2
+D|Kempf|Como|5|11|2
+D|Cittadini|Frosinone|4|11|3
+D|Gatti|Juventus|5|11|2
+D|Leite|Lazio|6|11|2
+D|Pedraza|Lazio|5|11|2
+D|Floriani Mussolini|Lazio|3|11|1
+D|Caleta-Car|Sassuolo|6|11|3
+D|Cinquegrano|Sassuolo|5|11|2
+D|Bella-Kotchap|Venezia|4|11|3
+D|Hien|Atalanta|6|10|1
+D|Smolcic I.|Como|3|10|2
+D|Valdepenas|Fiorentina|5|10|2
+D|Ranieri L.|Fiorentina|3|10|2
 D|Parisi|Fiorentina|4|10|2
-D|Ranieri L.|Fiorentina|3|10|1
-D|Oyono A.|Frosinone|6|10|3
-D|Mitaj|Genoa|4|10|3
-D|Drameh|Genoa|3|10|2
-D|Gatti|Juventus|4|10|2
-D|Floriani Mussolini|Lazio|4|10|1
-D|Valenti|Parma|4|10|2
-D|Britschgi|Parma|3|10|2
-D|Ghilardi|Roma|5|10|1
-D|Lulli|Roma|2|10|1
-D|Walukiewicz|Sassuolo|4|10|2
-D|Doig|Sassuolo|5|10|2
-D|Bertola|Udinese|4|10|2
-D|Zanoli|Udinese|4|10|2
-D|Abankwah|Udinese|2|10|1
-D|Haps|Venezia|5|10|3
+D|Oyono A.|Frosinone|9|10|2
+D|Ehizibue|Genoa|4|10|3
+D|Cambiaso|Juventus|7|10|2
+D|Gabbia|Milan|6|10|2
+D|Buongiorno|Napoli|5|10|2
+D|Olivera|Napoli|4|10|2
+D|Valenti|Parma|3|10|2
+D|Lulli|Roma|3|10|1
+D|Walukiewicz|Sassuolo|3|10|2
+D|Comuzzo|Torino|7|10|2
+D|Patterson|Torino|5|10|2
+D|Zanoli|Udinese|5|10|2
+D|Kabasele|Udinese|3|10|2
+D|Mazzocchi|Venezia|1|10|3
+D|Schingtienne|Venezia|2|10|3
 D|Juan Jesus|Venezia|4|10|2
-D|Schingtienne|Venezia|3|10|2
-D|Halhal|Venezia|3|10|2
-D|Mazzocchi|Venezia|1|10|1
-D|Carboni A.|Monza|3|9|2
-D|Kolasinac|Atalanta|6|8|1
-D|Kofler|Cagliari|5|8|2
-D|Kambwala|Como|3|8|1
-D|Pongracic|Fiorentina|4|8|1
-D|Cittadini|Frosinone|4|8|2
-D|Terzic|Frosinone|4|8|2
-D|Tchato|Frosinone|3|8|2
-D|Tomori|Milan|6|8|2
-D|Ziolkowski|Monza|1|8|2
-D|Marin R.|Napoli|2|8|1
-D|Ndiaye|Parma|2|8|2
-D|Odenthal|Sassuolo|3|8|1
-D|Arizala|Udinese|4|8|1
-D|Pellegrini Lu.|Lazio|2|7|1
-D|Cande|Sassuolo|3|7|1
-D|Sverko|Venezia|3|7|1
-D|Franjic|Venezia|3|7|1
+D|Vitik|Bologna|4|9|2
+D|Sugawara|Cagliari|6|9|2
+D|Drameh|Genoa|2|9|2
+D|Carboni A.|Monza|4|9|2
+D|Ghilardi|Roma|5|9|1
+D|Koulierakis|Roma|7|9|1
+D|Obrador|Sassuolo|5|9|2
+D|Rodriguez R.|Torino|5|9|1
+D|Bertola|Udinese|4|9|2
+D|Haps|Venezia|5|9|2
+D|Dodo|Fiorentina|8|8|1
+D|Pongracic|Fiorentina|3|8|1
+D|Badiashile|Napoli|6|8|1
+D|Ndiaye|Parma|1|8|2
+D|Arizala|Udinese|3|8|1
+D|Palma|Udinese|2|8|1
+D|Correia T.|Venezia|6|8|2
+D|Mitaj|Genoa|3|7|2
+D|Pellegrini Lu.|Lazio|1|7|1
+D|Tomori|Milan|5|7|2
+D|Ziolkowski|Monza|1|7|2
+D|Beukema|Napoli|4|7|1
+D|Sverko|Venezia|2|7|1
+D|Halhal|Venezia|2|7|1
 D|Alhassane|Bologna|2|6|1
-D|Akpoguma|Frosinone|3|6|1
+D|Akpoguma|Frosinone|2|6|2
+D|Tchato|Frosinone|2|6|2
+D|Odenthal|Sassuolo|3|6|1
+D|Cande|Sassuolo|2|6|1
+D|Van Der Brempt|Sassuolo|1|6|1
 D|Moreno M.|Venezia|4|6|1
-D|Casale|Bologna|3|5|1
-D|Aurelio|Cagliari|2|5|2
+D|Franjic|Venezia|2|6|1
+D|Casale|Bologna|2|5|1
+D|Aurelio|Cagliari|1|5|2
+D|Kambwala|Como|2|5|1
+D|Terzic|Frosinone|4|5|1
 D|Otoa|Genoa|2|5|2
-D|Sabelli|Genoa|2|5|2
-D|Lazzari|Lazio|2|5|1
-D|Ndaba|Lecce|2|5|2
-D|Goglichidze|Monza|2|5|2
-D|Biraghi|Torino|2|5|1
+D|Sabelli|Genoa|2|5|1
+D|Lazzari|Lazio|1|5|1
+D|Ndaba|Lecce|1|5|2
+D|Goglichidze|Monza|1|5|2
+D|Biraghi|Torino|1|5|1
 D|Ebosse|Udinese|3|5|1
-D|De Silvestri|Bologna|1|4|1
+D|De Silvestri|Bologna|2|4|1
+D|Kofler|Cagliari|5|4|2
 D|Cabal|Juventus|1|4|1
-D|Jean|Lecce|2|4|2
-D|Diawara S.|Milan|2|4|1
-D|Terracciano F.|Milan|2|4|1
-D|Bakoune|Monza|2|4|1
-D|Cinquegrano|Sassuolo|2|4|1
-D|Sagrado|Venezia|2|4|1
-D|Idrissi R.|Cagliari|3|3|1
+D|Jean|Lecce|1|4|2
+D|Diawara S.|Milan|1|4|1
+D|Terracciano F.|Milan|1|4|1
+D|Bakoune|Monza|4|4|1
+D|Sagrado|Venezia|3|4|1
+D|Idrissi R.|Cagliari|2|3|1
 D|Puczka|Genoa|2|3|1
 D|Rugani|Juventus|1|3|1
 D|Marianucci|Napoli|1|3|1
@@ -395,190 +395,190 @@ D|Maye|Monza|1|1|1
 D|Drobnic|Parma|2|1|1
 D|Pieragnolo|Sassuolo|1|1|1
 D|Gomes|Venezia|1|1|1
-C|Paz N.|Como|29|245|3
-C|Calhanoglu|Inter|28|243|3
-C|McTominay|Napoli|27|220|3
-C|Orsolini|Bologna|25|177|3
-C|Pulisic|Milan|24|150|3
-C|Rabiot|Milan|23|145|3
-C|De Bruyne|Napoli|17|108|3
-C|Baturina|Como|20|105|3
-C|Mora|Roma|20|100|3
-C|Da Cunha|Como|18|87|3
-C|Zaccagni|Lazio|16|87|3
-C|Barella|Inter|18|81|3
-C|Zaniolo|Udinese|18|80|3
-C|Atta|Fiorentina|15|78|3
-C|Frattesi|Lazio|10|75|3
-C|Vlasic|Torino|13|73|3
-C|McKennie|Juventus|17|70|3
-C|Conceicao|Juventus|13|68|3
-C|Ekkelenkamp|Udinese|12|57|3
-C|Taylor K.|Lazio|13|53|3
-C|Goncalves P.|Fiorentina|12|50|3
-C|Mastantuono|Fiorentina|11|50|3
-C|Kessie|Atalanta|12|47|3
-C|Jones C.|Inter|12|47|3
-C|Ederson D.S.|Atalanta|12|46|3
-C|Zielinski|Inter|12|45|3
-C|Gonzalez N.|Juventus|12|45|3
-C|Modric|Milan|12|45|3
-C|Moreira|Milan|11|45|3
-C|Samardzic|Atalanta|13|44|3
-C|Diouf|Inter|9|43|2
-C|Alajbegovic|Juventus|11|42|3
-C|Kone M.|Roma|10|42|3
-C|Zambo Anguissa|Napoli|10|41|3
-C|Rowe|Atalanta|10|40|3
-C|Gudmundsson A.|Lazio|12|40|3
-C|Thorstvedt|Sassuolo|10|39|3
-C|Politano|Napoli|9|37|3
-C|Saelemaekers|Milan|11|35|2
-C|Vergara|Napoli|10|35|2
-C|Perrone|Como|10|34|3
-C|Bernabe|Parma|7|34|3
-C|Locatelli|Juventus|9|33|2
-C|Rodriguez Je.|Como|11|31|2
-C|Gaetano|Atalanta|7|30|2
-C|Milla|Como|6|30|2
-C|Cristante|Roma|9|29|3
-C|Mbangula|Bologna|8|28|3
-C|Njie|Fiorentina|4|28|3
-C|Baldanzi|Genoa|11|28|3
-C|Bernardeschi|Bologna|10|27|3
-C|Calo|Frosinone|8|27|3
-C|Casadei|Torino|9|27|3
-C|Cambiaghi|Bologna|8|25|3
-C|Schmid|Frosinone|8|25|3
-C|El Shaarawy|Genoa|7|25|3
-C|Thuram K.|Juventus|9|25|2
-C|Sarr P.|Juventus|7|25|2
-C|Cancellieri|Lazio|9|25|2
-C|Hutchinson|Milan|8|25|2
-C|Volpato|Sassuolo|9|25|3
-C|Cisse A.|Milan|5|24|2
-C|Cacciamani|Torino|6|24|3
-C|Ferguson|Bologna|7|23|2
-C|Fazzini|Cagliari|6|23|3
-C|Monteiro J.|Lecce|7|23|3
-C|Lobotka|Napoli|8|23|2
-C|Mandragora|Torino|8|23|3
-C|Pasalic|Atalanta|8|22|2
-C|Elmas|Atalanta|7|22|2
-C|Ndour|Fiorentina|7|22|2
-C|Isaksen|Lazio|9|22|2
-C|Chukwueze|Milan|8|22|1
-C|Romano|Cagliari|7|21|3
-C|Liberali|Como|6|21|2
-C|Sucic P.|Inter|9|21|2
-C|Fagioli|Fiorentina|7|20|2
-C|Pellegrini Lo.|Roma|9|20|3
-C|Kone I.|Sassuolo|8|20|3
-C|Braganca|Torino|6|20|2
-C|Karlstrom|Udinese|7|20|3
+C|Paz N.|Como|29|248|3
+C|Calhanoglu|Inter|27|220|3
+C|Baturina|Como|21|153|3
+C|Pulisic|Milan|25|150|3
+C|Rabiot|Milan|24|141|3
+C|Orsolini|Bologna|23|138|3
+C|Zaccagni|Lazio|18|122|3
+C|McTominay|Napoli|24|120|3
+C|Frattesi|Lazio|12|113|3
+C|De Bruyne|Napoli|17|90|3
+C|Barella|Inter|18|84|3
+C|Zaniolo|Udinese|16|71|3
+C|Mastantuono|Fiorentina|14|70|3
+C|Conceicao|Juventus|14|70|3
+C|Da Cunha|Como|17|69|3
+C|Mora|Roma|20|65|3
+C|Ekkelenkamp|Udinese|14|64|3
+C|Atta|Fiorentina|14|63|3
+C|McKennie|Juventus|15|61|3
+C|Moreira|Milan|15|60|3
+C|Vlasic|Torino|11|57|3
+C|Diouf|Inter|11|56|3
+C|Kone M.|Roma|14|50|3
+C|Gonzalez N.|Juventus|13|46|3
+C|Ederson D.S.|Atalanta|13|45|3
+C|Taylor K.|Lazio|13|43|3
+C|Politano|Napoli|11|42|3
+C|Zielinski|Inter|13|41|3
+C|Alajbegovic|Juventus|11|40|3
+C|Modric|Milan|12|40|3
+C|Mandragora|Torino|12|40|3
+C|Schmid|Frosinone|11|38|3
+C|Gudmundsson A.|Lazio|13|38|3
+C|Goncalves P.|Fiorentina|11|37|3
+C|Calo|Frosinone|11|37|3
+C|Adzic|Sassuolo|11|37|3
+C|Samardzic|Atalanta|14|36|3
+C|Rowe|Atalanta|9|35|3
+C|Bernardeschi|Bologna|12|35|3
+C|Cisse A.|Milan|6|34|2
+C|Kessie|Atalanta|11|33|3
+C|Jones C.|Inter|12|33|2
+C|Perrone|Como|11|32|3
+C|Saelemaekers|Milan|11|32|2
+C|Cristante|Roma|11|31|3
+C|Thorstvedt|Sassuolo|9|31|3
+C|Pisilli|Roma|9|30|3
+C|Njie|Fiorentina|7|28|3
+C|Lobotka|Napoli|11|28|3
+C|Zambo Anguissa|Napoli|9|27|2
+C|Bernabe|Parma|6|27|3
+C|Milla|Como|7|26|2
+C|Fazzini|Cagliari|7|25|3
+C|Vergara|Napoli|9|25|2
+C|Cacciamani|Torino|8|25|3
+C|Gaetano|Atalanta|6|23|2
+C|Rodriguez Je.|Como|11|23|2
+C|Sarr P.|Juventus|7|23|2
+C|Chukwueze|Milan|10|23|2
+C|Ferguson|Bologna|8|22|3
+C|Cambiaghi|Bologna|8|22|3
+C|Fagioli|Fiorentina|8|22|2
+C|Zhegrova|Juventus|10|22|2
+C|Cancellieri|Lazio|11|22|2
+C|Romano|Cagliari|10|21|3
+C|Baldanzi|Genoa|10|21|3
+C|Isaksen|Lazio|8|21|2
+C|Ndour|Fiorentina|8|20|2
+C|Monteiro J.|Lecce|6|20|3
+C|Kone I.|Sassuolo|7|20|3
+C|Volpato|Sassuolo|9|20|3
+C|Karlstrom|Udinese|9|20|3
 C|Frendrup|Genoa|7|19|3
-C|Pierotti|Lecce|6|19|3
-C|Pisilli|Roma|7|19|2
-C|Basic|Venezia|6|19|3
-C|Zalewski|Atalanta|7|18|1
-C|Oulai|Fiorentina|6|18|2
-C|Fitz-Jim|Torino|5|18|2
-C|Odgaard|Bologna|8|17|2
-C|Caqueret|Como|6|17|1
-C|Zhegrova|Juventus|6|17|1
-C|Coulibaly L.|Lecce|7|17|3
-C|Folorunsho|Monza|4|17|3
-C|Ellertsson|Genoa|6|16|3
-C|Rovella|Lazio|7|16|2
-C|Loftus-Cheek|Milan|4|16|1
-C|Nicolussi Caviglia|Parma|6|16|3
-C|Adzic|Sassuolo|6|16|3
-C|Unai Gomez|Udinese|7|16|3
-C|Winks|Cagliari|6|15|3
-C|Sow|Genoa|7|15|2
-C|Koopmeiners|Juventus|7|15|1
-C|Douglas Luiz|Juventus|4|15|1
-C|Musah|Milan|3|15|1
-C|Colpani|Monza|9|15|3
-C|Pessina|Monza|6|15|3
-C|Keita M.|Parma|5|15|3
-C|Matic|Sassuolo|6|15|2
-C|Piotrowski|Udinese|6|15|2
-C|Perez K.|Venezia|5|15|3
-C|Moro N.|Bologna|4|14|2
-C|Toure I.|Monza|6|14|3
-C|Bakola|Sassuolo|6|14|2
-C|Busio|Venezia|5|14|3
-C|Adopo|Cagliari|7|13|3
-C|Fini|Frosinone|4|13|3
-C|Dele-Bashiru|Lazio|5|13|1
-C|Jashari|Milan|5|13|1
-C|Pobega|Bologna|6|12|1
-C|Massolin|Cagliari|4|12|2
-C|Fadera|Cagliari|2|12|2
-C|Ricci S.|Como|4|12|1
-C|Zerbin|Frosinone|6|12|3
-C|Cichella|Frosinone|4|12|2
+C|Sucic P.|Inter|9|19|2
+C|Pasalic|Atalanta|7|18|2
+C|Koopmeiners|Juventus|8|18|2
+C|Braganca|Torino|7|18|3
+C|Fitz-Jim|Torino|6|18|2
+C|Elmas|Atalanta|6|17|2
+C|Coulibaly L.|Lecce|10|17|3
+C|Bakola|Sassuolo|8|17|2
+C|Casadei|Torino|8|17|2
+C|Mbangula|Bologna|7|16|2
+C|Oulai|Fiorentina|5|16|2
+C|Douglas Luiz|Juventus|4|16|1
+C|Rovella|Lazio|6|16|2
+C|Pierotti|Lecce|6|16|3
+C|Musah|Milan|4|16|1
+C|Nicolussi Caviglia|Parma|4|16|3
+C|Keita M.|Parma|6|16|3
+C|Winks|Cagliari|8|15|3
+C|Sow|Genoa|7|15|3
+C|Locatelli|Juventus|8|15|1
+C|Thuram K.|Juventus|8|15|1
+C|Loftus-Cheek|Milan|4|15|1
+C|Colpani|Monza|8|15|3
+C|Pessina|Monza|5|15|3
+C|Folorunsho|Monza|3|15|3
+C|Matic|Sassuolo|9|15|2
+C|Moro N.|Bologna|5|14|2
+C|Ellertsson|Genoa|5|14|3
+C|Hutchinson|Milan|7|14|1
+C|Busio|Venezia|7|14|3
+C|Perez K.|Venezia|5|14|3
+C|Odgaard|Bologna|7|13|2
+C|Masini|Frosinone|7|13|3
+C|Ilic|Lecce|4|13|3
+C|Akinsanmiro|Monza|8|13|3
+C|Unai Gomez|Udinese|6|13|3
+C|Basic|Venezia|5|13|3
+C|Pobega|Bologna|8|12|1
+C|Adopo|Cagliari|9|12|3
+C|Fadera|Cagliari|4|12|2
+C|Massolin|Cagliari|3|12|2
+C|Ricci S.|Como|3|12|2
+C|El Shaarawy|Genoa|7|12|2
 C|Luis Henrique|Inter|5|12|2
-C|Cataldi|Lazio|4|12|1
-C|Ngom|Lecce|4|12|3
-C|Berisha M.|Lecce|4|12|2
 C|Gorter|Lecce|3|12|2
+C|Ngom|Lecce|4|12|2
 C|Mout|Monza|1|12|2
-C|Diallo O.|Parma|3|12|3
-C|Dominguez B.|Sassuolo|4|12|2
+C|Almqvist|Parma|8|12|3
+C|Fabbian|Parma|4|12|2
+C|Pellegrini Lo.|Roma|8|12|2
+C|Dominguez B.|Sassuolo|5|12|2
 C|Oristanio|Torino|6|12|2
 C|Gineitis|Torino|5|12|1
+C|Piotrowski|Udinese|6|12|2
 C|Miller L.|Udinese|4|12|2
-C|Brescianini|Fiorentina|3|11|1
-C|Koutsoupias|Frosinone|4|11|2
-C|Meichtry|Genoa|5|11|2
-C|Amorim|Genoa|4|11|2
-C|Traore Hj.|Genoa|4|11|1
-C|Akinsanmiro|Monza|7|11|2
-C|Almqvist|Parma|4|11|2
-C|Sohm|Venezia|5|11|3
-C|Amondarain|Bologna|5|10|1
-C|El Azzouzi O.|Bologna|2|10|1
+C|Zalewski|Atalanta|6|11|1
+C|Amondarain|Bologna|4|11|1
+C|Caqueret|Como|6|11|1
+C|Fini|Frosinone|5|11|3
+C|Zerbin|Frosinone|5|11|2
+C|Berisha M.|Lecce|4|11|2
+C|Jashari|Milan|4|11|1
+C|Deiola|Cagliari|5|10|2
+C|Liberali|Como|5|10|1
 C|Addai|Como|4|10|1
-C|Grillitsch|Frosinone|4|10|2
-C|Gandelman|Lecce|4|10|2
-C|Ilic|Lecce|1|10|1
-C|Gilmour|Napoli|3|10|2
+C|Amorim|Genoa|4|10|2
+C|Mkhitaryan|Inter|4|10|1
+C|Gandelman|Lecce|4|10|1
+C|Toure I.|Monza|4|10|2
+C|Gilmour|Napoli|6|10|2
 C|Ordonez C.|Parma|3|10|2
+C|Sierro|Parma|2|10|2
 C|De Roon|Roma|4|10|2
-C|Mkhitaryan|Inter|4|9|1
-C|Deiola|Cagliari|3|8|2
+C|Sohm|Venezia|5|10|3
+C|El Azzouzi O.|Bologna|2|9|1
+C|Cichella|Frosinone|4|9|2
+C|Grillitsch|Frosinone|4|9|2
+C|Traore Hj.|Genoa|4|9|2
+C|Meichtry|Genoa|4|9|1
 C|Gagliardini|Cagliari|3|8|1
-C|Masini|Frosinone|3|8|1
-C|Messias|Genoa|4|8|1
-C|Fabbian|Parma|4|8|2
+C|Brescianini|Fiorentina|3|8|1
+C|Messias|Genoa|7|8|1
+C|Cataldi|Lazio|3|8|1
+C|Diallo O.|Parma|3|8|1
 C|Ilkhan|Torino|4|8|1
 C|Fernandez T.|Venezia|3|8|2
-C|Felici|Cagliari|5|7|1
-C|Stankovic A.|Inter|3|7|1
-C|Maleh|Lecce|3|7|1
+C|Felici|Cagliari|4|7|1
+C|Stankovic A.|Inter|2|7|1
+C|Dele-Bashiru|Lazio|4|7|1
+C|Maleh|Lecce|4|7|1
 C|Sulemana I.|Sassuolo|3|7|1
-C|Gelli F.|Frosinone|3|6|1
-C|Ciurria|Monza|2|6|2
-C|Chakvetadze|Udinese|2|6|2
-C|Hasa|Frosinone|2|5|1
+C|Gelli F.|Frosinone|2|6|1
+C|Ciurria|Monza|1|6|2
+C|Chakvetadze|Udinese|3|6|2
+C|Hasa|Frosinone|3|5|1
 C|Przyborek|Lazio|1|5|1
-C|Boloca|Sassuolo|2|5|1
-C|Lipani|Sassuolo|2|5|1
-C|Aboukhlal|Torino|3|5|1
-C|Jovanovic|Udinese|2|5|1
-C|Venturino|Genoa|2|4|1
-C|Colombo L.|Monza|3|4|1
-C|Anjorin|Torino|1|4|1
-C|Zarraga|Udinese|2|4|1
-C|Duncan|Venezia|2|4|2
+C|Lipani|Sassuolo|3|5|1
+C|Boloca|Sassuolo|1|5|1
+C|Aboukhlal|Torino|2|5|1
+C|Jovanovic|Udinese|1|5|1
+C|Venturino|Genoa|1|4|1
+C|Colombo L.|Monza|2|4|1
+C|Foe Ondoa|Monza|2|4|1
+C|Zarraga|Udinese|1|4|1
+C|Duncan|Venezia|1|4|2
 C|Kone B.|Frosinone|1|3|1
-C|Belahyane|Lazio|2|3|1
+C|Belahyane|Lazio|5|3|1
 C|Cremaschi|Parma|2|3|1
-C|Helgason|Venezia|3|3|2
-C|Kaba|Lecce|1|2|1
-C|Foe Ondoa|Monza|2|2|1
+C|Helgason|Venezia|2|3|2
+C|Libra|Bologna|1|2|1
+C|Kaba|Lecce|2|2|1
 C|Liteta|Cagliari|1|1|1
 C|Ciervo|Cagliari|1|1|1
 C|Lahdo|Como|1|1|1
@@ -587,94 +587,95 @@ C|Fofana Sa.|Lecce|1|1|1
 C|Laerke|Lecce|1|1|1
 C|Comotto|Milan|1|1|1
 C|Forson O.|Monza|2|1|1
+C|Lovric|Udinese|1|1|1
 C|Dagasso|Venezia|1|1|1
-A|Malen|Roma|38|450|3
-A|Martinez L.|Inter|33|361|3
-A|Hojlund|Napoli|28|260|3
-A|Thuram|Inter|28|249|3
-A|Ramos G.|Milan|27|237|3
-A|Douvikas|Como|22|185|3
-A|Kean|Como|24|183|3
-A|Kolo Muani|Juventus|25|165|3
-A|Woltemade|Juventus|23|160|3
-A|Scamacca|Atalanta|19|110|3
-A|Davis K.|Udinese|19|108|3
-A|Berardi|Sassuolo|19|106|3
-A|Esposito F.P.|Inter|17|105|2
-A|Yildiz|Juventus|22|100|2
-A|Dybala|Roma|16|100|3
-A|Krstovic|Atalanta|18|98|3
-A|De Ketelaere|Atalanta|17|95|2
-A|Lauriente|Sassuolo|15|83|3
-A|Simeone|Torino|14|80|3
-A|Raspadori|Atalanta|14|73|2
-A|Castro S.|Roma|14|70|2
-A|Santos A.|Napoli|14|61|3
-A|Pinamonti|Lazio|12|53|3
-A|Colombo|Genoa|11|52|3
-A|Dovbyk|Bologna|15|51|3
-A|Diao|Como|12|50|2
-A|Beto|Fiorentina|14|50|3
-A|Soule|Roma|13|48|2
-A|Pellegrino M.|Fiorentina|14|40|3
-A|Varela G.|Monza|7|40|3
-A|Esposito Se.|Sassuolo|12|40|2
-A|Toure E.|Parma|10|37|3
-A|Romero D.|Parma|10|37|3
-A|Kevin Carlos|Cagliari|12|36|3
-A|Adams A.|Venezia|11|35|3
-A|Adams C.|Torino|10|33|3
-A|Bowie|Sassuolo|9|32|2
-A|Bobcek|Frosinone|9|31|3
-A|Piccoli|Bologna|8|29|3
-A|Osmajic|Genoa|8|28|3
-A|Raimondo|Frosinone|9|27|3
-A|Boga|Juventus|7|27|2
-A|Yeboah J.|Venezia|9|27|3
-A|Gnonto|Fiorentina|7|25|2
-A|Kvernadze|Frosinone|6|24|2
-A|Ghedjemis|Frosinone|8|23|2
-A|Geubbels|Lecce|8|23|3
-A|Cutrone|Monza|9|23|3
-A|Maldini|Cagliari|5|21|3
-A|Camarda|Milan|4|20|3
-A|Neres|Napoli|6|20|2
-A|Zeballos|Monza|6|18|2
-A|Bonny|Inter|7|15|2
-A|Fatah|Lecce|4|14|3
-A|Lang|Napoli|4|14|2
-A|Vitinha O.|Genoa|8|13|2
-A|Ngonge|Monza|5|13|2
-A|Rrahmani Al.|Venezia|7|13|2
-A|Mendy P.|Cagliari|4|12|2
-A|N'Dri|Lecce|4|12|2
-A|Lucca|Napoli|4|12|1
-A|Zapata D.|Torino|6|12|2
-A|Birligea|Frosinone|5|11|1
-A|Stulic|Lecce|6|11|2
-A|Elphege|Parma|3|11|2
-A|Lontani|Parma|3|11|2
-A|Nzola|Cagliari|4|10|2
-A|Milik|Juventus|4|10|1
-A|Ekhator|Juventus|3|10|1
-A|Borrelli|Cagliari|4|9|1
-A|Kulenovic|Torino|4|9|2
-A|Sulemana K.|Atalanta|6|8|1
-A|Noslin|Lazio|6|8|3
-A|Mota|Monza|4|8|1
-A|Adorante|Venezia|4|8|2
-A|Giovane|Napoli|4|7|1
-A|Gueye|Udinese|4|7|3
-A|Frigan|Parma|4|6|1
-A|Havel|Genoa|4|5|2
-A|Robinson J.|Monza|4|5|1
-A|Enem|Bologna|2|4|2
-A|Robinho Junior|Genoa|1|3|1
-A|Bayo V.|Udinese|1|3|2
-A|Trepy|Cagliari|1|2|1
+A|Malen|Roma|37|437|3
+A|Martinez L.|Inter|36|418|3
+A|Thuram|Inter|31|275|3
+A|Hojlund|Napoli|27|240|3
+A|Ramos G.|Milan|25|237|3
+A|Kean|Como|23|138|3
+A|Douvikas|Como|22|138|3
+A|Kolo Muani|Juventus|23|122|3
+A|Dybala|Roma|17|120|3
+A|Davis K.|Udinese|19|113|3
+A|Esposito F.P.|Inter|18|107|2
+A|Berardi|Sassuolo|18|103|3
+A|Scamacca|Atalanta|19|100|3
+A|Woltemade|Juventus|22|97|3
+A|Krstovic|Atalanta|16|80|3
+A|Lauriente|Sassuolo|16|77|3
+A|Yildiz|Juventus|20|70|2
+A|Varela G.|Monza|10|69|3
+A|Diao|Como|14|67|2
+A|De Ketelaere|Atalanta|15|64|2
+A|Soule|Roma|16|63|2
+A|Raimondo|Frosinone|12|60|3
+A|Simeone|Torino|13|58|3
+A|Colombo|Genoa|10|53|3
+A|Pellegrino M.|Fiorentina|16|51|3
+A|Kvernadze|Frosinone|11|50|3
+A|Beto|Fiorentina|13|49|3
+A|Maldini|Cagliari|11|45|3
+A|Romero D.|Parma|13|44|3
+A|Piccoli|Bologna|9|41|3
+A|Esposito Se.|Sassuolo|14|41|2
+A|Pinamonti|Lazio|10|40|3
+A|Castro S.|Roma|13|40|2
+A|Santos A.|Napoli|13|37|3
+A|Osmajic|Genoa|10|36|3
+A|Noslin|Lazio|10|35|3
+A|Dovbyk|Bologna|15|33|3
+A|Bowie|Sassuolo|12|33|2
+A|Adams A.|Venezia|12|33|3
+A|Ghedjemis|Frosinone|11|31|2
+A|Toure E.|Parma|10|31|3
+A|Raspadori|Atalanta|14|30|2
+A|Yeboah J.|Venezia|8|27|3
+A|Adams C.|Torino|11|25|3
+A|Boga|Juventus|6|21|2
+A|Kevin Carlos|Cagliari|10|20|3
+A|Mendy P.|Cagliari|8|20|2
+A|Zeballos|Monza|7|19|3
+A|Gnonto|Fiorentina|7|17|2
+A|Neres|Napoli|5|17|2
+A|Bonny|Inter|8|16|2
+A|Cutrone|Monza|8|16|2
+A|Geubbels|Lecce|7|15|3
+A|Lontani|Parma|6|15|2
+A|Robinson J.|Monza|8|13|2
+A|Kulenovic|Torino|6|13|2
+A|Camarda|Milan|4|12|3
+A|Lang|Napoli|4|12|2
+A|Vitinha O.|Genoa|7|11|2
+A|Stulic|Lecce|6|11|3
+A|Lucca|Napoli|3|11|1
+A|Nzola|Cagliari|3|10|2
+A|Bobcek|Frosinone|8|10|2
+A|N'Dri|Lecce|4|10|2
+A|Mota|Monza|6|10|1
+A|Ngonge|Monza|4|10|1
+A|Elphege|Parma|5|10|2
+A|Zapata D.|Torino|5|10|2
+A|Gueye|Udinese|7|10|3
+A|Rrahmani Al.|Venezia|6|9|2
+A|Fatah|Lecce|5|8|2
+A|Ekhator|Juventus|2|6|1
+A|Frigan|Parma|4|5|1
+A|Sulemana K.|Atalanta|4|4|1
+A|Enem|Bologna|1|4|2
+A|Havel|Genoa|3|4|2
+A|Adorante|Venezia|4|4|2
+A|Birligea|Frosinone|4|3|1
+A|Esteban|Lecce|2|3|1
+A|Bayo V.|Udinese|2|3|2
+A|Trepy|Cagliari|1|1|1
+A|Robinho Junior|Genoa|1|1|1
+A|Milik|Juventus|4|1|1
+A|Giovane|Napoli|3|1|1
 A|De Martis|Parma|1|1|1
-A|Lisman|Venezia|1|1|1
-A|Lauberbach|Venezia|1|1|1`.trim();
+A|Lauberbach|Venezia|2|1|1
+A|Lisman|Venezia|1|1|1`.trim();
 
 const ROLES = ["P", "D", "C", "A"];
 const RNAME = {P:"Portieri", D:"Difensori", C:"Centrocampisti", A:"Attaccanti"};
@@ -700,17 +701,24 @@ const PRESETS_B = {
 };
 const ALT_W_B = [1.0, 0.7, 0.45, 0.25];
 const KEYB = "bancoasta:v2";
-const VERSION_B = "2.5";
+const VERSION_B = "2.8";
 
 const clampB = (v,a,b) => Math.max(a, Math.min(b, v));
 const crB = x => Math.max(1, Math.round(x));
 
+/* Identificativo stabile: ruolo + nome. Resta uguale anche se il listone cambia. */
+function pidB(r, nome){
+  return "p-" + (r+"-"+nome).toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"");
+}
 function parseRawB(raw){
-  const out = [];
+  const out = [], visti = {};
   raw.split("\n").forEach((line, i) => {
     line = line.trim(); if(!line) return;
     const c = line.split("|"); if(c.length < 4) return;
-    out.push({id:"p"+i, r:c[0].trim().toUpperCase(), nome:c[1].trim(), team:c[2].trim(),
+    const base = pidB(c[0].trim().toUpperCase(), c[1].trim());
+    visti[base] = (visti[base]||0)+1;
+    out.push({id: visti[base]===1 ? base : base+"-"+visti[base],
+      r:c[0].trim().toUpperCase(), nome:c[1].trim(), team:c[2].trim(),
       q:parseInt(c[3])||1, fvm:c[4]?parseInt(c[4])||0:0, t:c[5]?parseInt(c[5])||2:2});
   });
   return out;
@@ -739,10 +747,19 @@ let ST;
 try{
   const raw = localStorage.getItem(KEYB);
   ST = raw ? Object.assign(defaultStateB(), JSON.parse(raw)) : defaultStateB();
-  if((ST.players||[]).length !== defaultStateB().players.length){
-    ST.players = defaultStateB().players; ST.sold = {}; ST.targets = {};
-    ST.formation = {modulo:"3-4-3", slots:{}}; ST.parts = null;
-  }
+  // Il listone segue sempre il file, ma l'asta in corso si conserva:
+  // gli acquisti vengono ricollegati per ruolo+nome, non per posizione.
+  const vecchi = ST.players || [], nuovi = defaultStateB().players;
+  const remap = {}; vecchi.forEach(p => remap[p.id] = pidB(p.r, p.nome));
+  const validi = new Set(nuovi.map(p => p.id));
+  const sposta = d => { const o = {}; Object.keys(d||{}).forEach(k => {
+    const nk = remap[k] || k; if(validi.has(nk)) o[nk] = d[k]; }); return o; };
+  ST.sold = sposta(ST.sold); ST.targets = sposta(ST.targets);
+  const f = ST.formation || {modulo:"3-4-3", slots:{}}; const ns = {};
+  Object.keys(f.slots||{}).forEach(k => { const v = remap[f.slots[k]] || f.slots[k];
+    if(validi.has(v)) ns[k] = v; });
+  f.slots = ns; ST.formation = f;
+  ST.players = nuovi;
 }catch(e){ ST = defaultStateB(); }
 
 function saveB(){
@@ -1007,7 +1024,8 @@ function importListoneB(text){
     const teamI = c.findIndex((x,i)=>i>nomeI && x && isNaN(Number(x)) && x.length>1);
     const nums = c.map((x,i)=>({n:Number(x),i:i})).filter(o=>o.i>ri && !isNaN(o.n) && o.n>0 && o.n<1200);
     if(!nums.length) return;
-    out.push({id:"i"+(k++), r:c[ri].toUpperCase(), nome:c[nomeI], team:teamI>0?c[teamI]:"?",
+    k++;
+    out.push({id:pidB(c[ri].toUpperCase(), c[nomeI]), r:c[ri].toUpperCase(), nome:c[nomeI], team:teamI>0?c[teamI]:"?",
       q:Math.round(nums[0].n), fvm:nums.length>3?Math.round(nums[3].n):0, t:2});
   });
   if(out.length > 20){
@@ -1171,7 +1189,8 @@ async function api(path, body){
   switch(path){
     case "/api/state": return snapshotB();
     case "/api/config":
-      Object.assign(ST.cfg, body.cfg||{});
+      // ad asta aperta il formato resta quello di partenza: i nomi passano da /api/names
+      if(!ST.parts) Object.assign(ST.cfg, body.cfg||{});
       if(body.alloc) ST.alloc = body.alloc;
       if(body.preset) ST.preset = body.preset;
       saveB(); return {ok:true};
@@ -1197,6 +1216,13 @@ async function api(path, body){
       saveB(); return {ok:true};
     case "/api/key": ST.api_key = (body.key||"").trim(); saveB(); return {ok:true};
     case "/api/note": ST.note = body.note||""; saveB(); return {ok:true};
+    case "/api/wipe": ST = defaultStateB(); saveB(); return {ok:true};
+    case "/api/names": {
+      const nomi = (body.names||[]).map(n=>String(n||"").trim());
+      ST.cfg.names = nomi;
+      (ST.parts||[]).forEach((pt,i)=>{ pt.name = nomi[i] || (i===0 ? "La mia squadra" : "Squadra "+(i+1)); });
+      saveB(); return {ok:true};
+    }
     case "/api/testkey": return await testKeyB();
     case "/api/import": return {n: importListoneB(body.text||"")};
     case "/api/chat":
@@ -1686,22 +1712,27 @@ function allocBar(alloc,budget,spent){
 }
 function viewFormato(){
   const c=S.cfg,a=S.alloc;
+  const L=S.ready?' disabled':'';     // ad asta aperta il formato non si tocca
   let h='';
   if(!S.ready) h+='<button class="btn" style="margin-bottom:12px" onclick="startAuction()">Apri l\'asta</button>';
   h+='<div class="grid2"><div><div class="card"><h3>Formato della lega</h3>'+
   '<div class="row" style="margin-bottom:10px">'+
-  '<div><span class="lbl">Partecipanti</span><input class="fld mono" id="f_teams" type="number" min="4" max="16" value="'+c.teams+'" onchange="readCfg();render()"></div>'+
-  '<div><span class="lbl">Crediti</span><input class="fld mono" id="f_budget" type="number" min="100" step="50" value="'+c.budget+'"></div></div>'+
+  '<div><span class="lbl">Partecipanti</span><input class="fld mono" id="f_teams" type="number" min="4" max="16" value="'+c.teams+'"'+L+' onchange="readCfg();saveCfg();render()"></div>'+
+  '<div><span class="lbl">Crediti</span><input class="fld mono" id="f_budget" type="number" min="100" step="50" value="'+c.budget+'"'+L+'></div></div>'+
   '<span class="lbl">Slot di rosa</span><div class="grid4">'+
-  R.map(r=>'<div><input class="fld mono" style="text-align:center" id="f_s'+r+'" type="number" min="1" value="'+c.slots[r]+'">'+
+  R.map(r=>'<div><input class="fld mono" style="text-align:center" id="f_s'+r+'" type="number" min="1" value="'+c.slots[r]+'"'+L+'>'+
    '<div style="text-align:center;font-size:10px;color:var(--mut);margin-top:4px">'+r+'</div></div>').join("")+'</div>'+
   '<label style="display:flex;gap:9px;align-items:center;margin-top:12px;font-size:14px">'+
-  '<input type="checkbox" id="f_mod"'+(c.mod_difesa?' checked':'')+'> Modificatore di difesa attivo</label></div>'+
+  '<input type="checkbox" id="f_mod"'+(c.mod_difesa?' checked':'')+L+'> Modificatore di difesa attivo</label>'+
+  (S.ready?'<div class="note">Ad asta aperta partecipanti, crediti e slot sono bloccati, per tenere i conti coerenti. '+
+   'Per cambiarli usa <b>Cancella tutto</b> in fondo alla pagina. I nomi delle squadre e la strategia si possono cambiare sempre.</div>':'')+
+  '</div>'+
   '<div class="card"><h3>Chi c\'è in lega</h3>';
   for(let i=0;i<c.teams;i++) h+='<div style="display:flex;gap:8px;align-items:center;margin-bottom:6px">'+
    '<span class="mono" style="width:20px;font-size:12px;color:'+(i===0?'var(--rosa)':'var(--mut)')+'">'+(i+1)+'</span>'+
    '<input class="fld nm" style="padding:7px 10px;font-size:14px" placeholder="'+(i===0?'La mia squadra':'Squadra '+(i+1))+
-   '" value="'+esc((c.names&&c.names[i])||"")+'"></div>';
+   '" value="'+esc((c.names&&c.names[i])||"")+'" oninput="nomiScritti()" onchange="nomiSalva(true)"></div>';
+  h+='<div id="nomiMsg" style="font-size:12px;color:var(--mint);height:16px;margin-top:2px"></div>';
   h+='</div></div><div>';
   h+='<div class="card"><h3>Strategia di partenza</h3>';
   Object.keys(S.presets).forEach(k=>{const p=S.presets[k];
@@ -1729,7 +1760,16 @@ function viewFormato(){
   '<button class="btn ghost" style="margin-top:8px" onclick="testKey()"'+(busy?' disabled':'')+'>'+
   (busy==='key'?'<span class="spin"></span> sto provando…':'Prova la chiave e la connessione')+'</button>'+
   '<div id="keymsg" style="font-size:12.5px;line-height:1.5;margin-top:9px"></div></div>';
-  h+='<button class="btn" onclick="startAuction()">'+(S.ready?"Ricomincia l'asta con questo formato":"Apri l'asta")+'</button>';
+  if(S.ready){
+    h+='<button class="btn" onclick="riavvia()">Ricomincia l\'asta</button>'+
+     '<div style="font-size:12px;color:var(--mut);margin:6px 2px 14px;line-height:1.5">Azzera acquisti e formazione, '+
+     'ogni squadra torna a '+c.budget+' crediti. Restano nomi, formato, strategia, obiettivi e appunti.</div>';
+  } else {
+    h+='<button class="btn" style="margin-bottom:14px" onclick="startAuction()">Apri l\'asta</button>';
+  }
+  h+='<button class="btn ghost" style="border-color:#5a2a2a;color:#FF9E9E" onclick="cancellaTutto()">Cancella tutto</button>'+
+   '<div style="font-size:12px;color:var(--mut);margin:6px 2px 0;line-height:1.5">Riporta l\'app come appena installata: '+
+   'asta, nomi, formato, strategia, obiettivi, appunti e chat.</div>';
   h+='</div></div>';
   return h;
 }
@@ -1749,7 +1789,33 @@ function readCfg(){
   S.cfg.names=[].slice.call(document.querySelectorAll(".nm")).map(e=>e.value);
 }
 async function saveCfg(){ readCfg(); await api("/api/config",{cfg:S.cfg,alloc:S.alloc,preset:S.preset}); }
+/* I nomi si salvano mentre scrivi, e valgono anche ad asta gia' aperta. */
+function nomiScritti(){ clearTimeout(window.__nomiT); window.__nomiT=setTimeout(()=>nomiSalva(false),600); }
+async function nomiSalva(aggiorna){
+  clearTimeout(window.__nomiT);
+  const nomi=[].slice.call(document.querySelectorAll(".nm")).map(e=>e.value.trim());
+  S.cfg.names=nomi;
+  await api("/api/names",{names:nomi});
+  const m=document.getElementById("nomiMsg");
+  if(m){ m.textContent="nomi salvati ✓"; setTimeout(()=>{ const mm=document.getElementById("nomiMsg"); if(mm) mm.textContent=""; },1500); }
+  if(aggiorna) await refresh();
+}
 async function startAuction(){ await saveCfg(); await api("/api/start",{}); tab="asta"; alts=null; await refresh(); }
+async function riavvia(){
+  const n=S.venduti||0;
+  if(!confirm("Ricomincio l'asta da capo?\n\n"+(n?"Cancello "+n+" acquist"+(n===1?"o":"i")+" e la formazione: ":"")+
+     "tutte le squadre tornano a "+S.cfg.budget+" crediti.\n\nRestano nomi, partecipanti, budget, strategia, obiettivi e appunti.")) return;
+  await api("/api/start",{});
+  cur=null; ev=null; scout=null; alts=null; advice=null; tab="asta";
+  await refresh();
+}
+async function cancellaTutto(){
+  if(!confirm("Cancello TUTTO?\n\nAsta, nomi delle squadre, formato, strategia, obiettivi, appunti e chat.\n"+
+     "L'app torna come appena installata. Non si può annullare.")) return;
+  await api("/api/wipe",{});
+  cur=null; ev=null; scout=null; alts=null; advice=null; selChip=null; q=""; tab="formato";
+  await refresh();
+}
 async function testKey(){
   busy="key"; render();
   const r=await api("/api/testkey",{});

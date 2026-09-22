@@ -1,7 +1,7 @@
 /* Banco d'asta — service worker.
    Mette in cache tutta l'app al primo avvio: da lì in poi funziona senza rete.
    Cambia CACHE a ogni aggiornamento dei file per forzare il refresh sull'iPad. */
-const CACHE = "bancoasta-v2-5";
+const CACHE = "bancoasta-v2-8";
 const ASSETS = ["./", "./index.html", "./manifest.webmanifest",
   "./icon-192.png", "./icon-512.png", "./apple-touch-icon.png"];
 
