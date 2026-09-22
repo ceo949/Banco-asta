@@ -56,7 +56,8 @@ padding:9px 11px;font-size:16px;font-family:inherit}
 .grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
 .btn{background:var(--rosa);color:#12181D;border:none;border-radius:10px;padding:12px 14px;font-weight:600;
 font-size:14px;width:100%;font-family:inherit}
-.btn.ghost{background:none;border:1px solid var(--line);color:var(--cream)}
+.btn.ghost{background:var(--panel2);border:1px solid #46606F;color:var(--cream)}
+.btn,.mini{-webkit-appearance:none;appearance:none}
 .btn.mint{background:var(--mint)}.btn:disabled{opacity:.45}
 .mini{border:1px solid var(--line);background:var(--panel2);color:var(--cream);border-radius:8px;padding:6px 9px;
 font-size:12px;font-weight:600;font-family:inherit}
@@ -113,7 +114,7 @@ text-align:center;padding:3px;overflow:hidden}
 .chip{display:inline-flex;align-items:center;gap:6px;background:var(--panel2);border:1px solid var(--line);
 border-radius:9px;padding:6px 9px;font-size:12px;margin:0 6px 6px 0;touch-action:none}
 .chip.sel{border-color:var(--rosa);background:rgba(242,167,179,.15)}
-.ghost{position:fixed;z-index:99;pointer-events:none;opacity:.9;transform:translate(-50%,-50%)}
+.dragGhost{position:fixed;z-index:99;pointer-events:none;opacity:.9;transform:translate(-50%,-50%)}  /* nome proprio: "ghost" e' lo stile dei pulsanti */
 /* chat */
 .chatWrap{display:flex;flex-direction:column;height:calc(100vh - 130px);height:calc(100dvh - 130px)}
 .chatList{flex:1;overflow:auto;padding-right:4px}
@@ -701,7 +702,7 @@ const PRESETS_B = {
 };
 const ALT_W_B = [1.0, 0.7, 0.45, 0.25];
 const KEYB = "bancoasta:v2";
-const VERSION_B = "2.9";
+const VERSION_B = "3.0";
 
 const clampB = (v,a,b) => Math.max(a, Math.min(b, v));
 const crB = x => Math.max(1, Math.round(x));
@@ -1510,7 +1511,7 @@ function initDrag(){
       const move=ev2=>{
         if(!moved && Math.abs(ev2.clientY-e.clientY)+Math.abs(ev2.clientX-e.clientX)<6) return;
         moved=true;
-        if(!ghost){ ghost=ch.cloneNode(true); ghost.className="chip ghost"; document.body.appendChild(ghost); }
+        if(!ghost){ ghost=ch.cloneNode(true); ghost.className="chip dragGhost"; document.body.appendChild(ghost); }
         ghost.style.left=ev2.clientX+"px"; ghost.style.top=ev2.clientY+"px";
         document.querySelectorAll(".slot.hover").forEach(s=>s.classList.remove("hover"));
         const t=document.elementFromPoint(ev2.clientX,ev2.clientY);
@@ -1598,7 +1599,9 @@ function istruzioni(){
   "liquidi, il rischio di arrivare a fine asta con crediti inutilizzati.\n\n"+
   "Ti passero' lo stato dell'asta in forma sintetica. Rispondi breve e diretto, due o tre frasi, con una cifra massima concreta "+
   "e il motivo in una riga. Se sto per fare una sciocchezza dimmelo. Se una cosa non la sai, un infortunio dell'ultima ora, "+
-  "dillo invece di inventarla.";
+  "dillo invece di inventarla.\n\n"+
+  "Quando ti chiedo di titolarità, infortuni, squalifiche o probabili formazioni, cerca sul web le notizie più recenti "+
+  "e dimmi da quale fonte le prendi.";
 }
 function quadro(){
   const c=S.cfg, me=S.parts[0];
@@ -1643,18 +1646,21 @@ async function salvaNote(){
 function viewChat(){
   const msgs=S.chat||[];
   let h='<div class="grid2"><div>';
+  const passo=(n,titolo,testo)=>'<div style="display:flex;gap:10px;align-items:baseline;margin:0 0 7px">'+
+    '<span class="mono" style="flex:0 0 22px;height:22px;border-radius:50%;background:var(--rosa);color:#12181D;'+
+    'font-size:12px;font-weight:700;display:inline-flex;align-items:center;justify-content:center">'+n+'</span>'+
+    '<div><b style="font-size:14px">'+titolo+'</b><div style="font-size:12.5px;color:var(--mut);line-height:1.5;margin-top:2px">'+
+    testo+'</div></div></div>';
   h+='<div class="card"><h3>Il ponte con Claude</h3>'+
-   '<div style="font-size:13px;color:var(--mut);line-height:1.55;margin-bottom:10px">'+
-   'Se non usi la chiave API, il consulente lo fai girare nell\'app di Claude sul telefono. '+
-   'Qui l\'app prepara i testi da incollare: le istruzioni una volta sola, il quadro dell\'asta ogni volta che serve.</div>'+
-   '<div style="display:flex;gap:8px;flex-wrap:wrap">'+
-   '<button class="btn ghost" style="flex:1 1 200px" onclick="copia(istruzioni(),\'c1\')">'+
+   '<div style="font-size:13px;color:var(--mut);line-height:1.55;margin-bottom:14px">'+
+   'Il consulente gira nell\'app di Claude, dentro il tuo abbonamento. Qui l\'app prepara i testi da incollare.</div>'+
+   passo(1,'Una volta sola, all\'inizio','Apri una conversazione nuova su Claude e incolla le istruzioni. '+
+     'Attiva la ricerca web: così su titolarità e infortuni ti risponde con le notizie di oggi.')+
+   '<button class="btn ghost" style="margin:4px 0 18px;border-color:var(--rosa)" onclick="copia(istruzioni(),\'c1\')">'+
    '<span id="c1">Copia le istruzioni iniziali</span></button>'+
-   '<button class="btn" style="flex:1 1 200px" onclick="copia(quadro(),\'c2\')">'+
-   '<span id="c2">Copia il quadro adesso</span></button></div>'+
-   '<div style="font-size:12px;color:var(--mut);margin-top:9px;line-height:1.5">'+
-   'Le istruzioni si incollano una volta sola, all\'inizio della conversazione. Poi, a ogni domanda, incolla il quadro '+
-   'e aggiungi in fondo cosa vuoi sapere.</div></div>';
+   passo(2,'A ogni domanda','Incolla il quadro nella stessa conversazione e aggiungi in fondo cosa vuoi sapere.')+
+   '<button class="btn" style="margin-top:4px" onclick="copia(quadro(),\'c2\')">'+
+   '<span id="c2">Copia il quadro dell\'asta</span></button></div>';
   h+='<div class="card"><h3>Anteprima del quadro</h3>'+
    '<pre style="white-space:pre-wrap;word-break:break-word;font-family:ui-monospace,Menlo,monospace;'+
    'font-size:11.5px;line-height:1.5;color:var(--mut);margin:0;max-height:46vh;overflow:auto">'+

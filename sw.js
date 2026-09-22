@@ -5,7 +5,7 @@
    Icone e manifest: prima la cache, si aggiornano in background.
 
    Cambia CACHE a ogni aggiornamento dei file. */
-const CACHE = "bancoasta-v2-9";
+const CACHE = "bancoasta-v3-0";
 const ASSETS = ["./", "./index.html", "./manifest.webmanifest",
   "./icon-192.png", "./icon-512.png", "./apple-touch-icon.png"];
 const ATTESA_RETE_MS = 4000;
