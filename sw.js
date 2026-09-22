@@ -1,12 +1,20 @@
 /* Banco d'asta — service worker.
-   Mette in cache tutta l'app al primo avvio: da lì in poi funziona senza rete.
-   Cambia CACHE a ogni aggiornamento dei file per forzare il refresh sull'iPad. */
-const CACHE = "bancoasta-v2-8";
+
+   Pagina: prima la RETE. Con la connessione vedi sempre l'ultima versione pubblicata;
+   senza connessione (o se la rete non risponde entro 4 secondi) parte la copia salvata.
+   Icone e manifest: prima la cache, si aggiornano in background.
+
+   Cambia CACHE a ogni aggiornamento dei file. */
+const CACHE = "bancoasta-v2-9";
 const ASSETS = ["./", "./index.html", "./manifest.webmanifest",
   "./icon-192.png", "./icon-512.png", "./apple-touch-icon.png"];
+const ATTESA_RETE_MS = 4000;
 
 self.addEventListener("install", e => {
-  e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS)).then(() => self.skipWaiting()));
+  // cache:"reload" scavalca la memoria del browser: in cache finisce la versione vera del server
+  e.waitUntil(caches.open(CACHE)
+    .then(c => c.addAll(ASSETS.map(u => new Request(u, {cache: "reload"}))))
+    .then(() => self.skipWaiting()));
 });
 
 self.addEventListener("activate", e => {
@@ -15,20 +23,52 @@ self.addEventListener("activate", e => {
     .then(() => self.clients.claim()));
 });
 
+function ePagina(req, url){
+  return req.mode === "navigate" || url.pathname.endsWith("/") || url.pathname.endsWith("/index.html");
+}
+
 self.addEventListener("fetch", e => {
-  const url = new URL(e.request.url);
-  if (url.hostname === "api.anthropic.com") return;   // gli agenti non si mettono mai in cache
-  if (e.request.method !== "GET") return;
+  const req = e.request;
+  const url = new URL(req.url);
+  if (url.hostname === "api.anthropic.com") return;   // gli agenti non passano mai dalla cache
+  if (req.method !== "GET") return;
+
+  if (ePagina(req, url)) {
+    e.respondWith(new Promise(resolve => {
+      let chiuso = false;
+      const daCache = () => caches.match("./index.html", {ignoreSearch: true})
+        .then(h => h || caches.match(req, {ignoreSearch: true}));
+      const timer = setTimeout(() => {
+        daCache().then(h => { if (h && !chiuso) { chiuso = true; resolve(h); } });
+      }, ATTESA_RETE_MS);
+      // per URL e non per Request: una richiesta di navigazione non accetta opzioni
+      fetch(url.href, {cache: "no-store"}).then(res => {
+        if (res && res.ok) {
+          const copia = res.clone();
+          caches.open(CACHE).then(c => c.put("./index.html", copia));
+        }
+        clearTimeout(timer);
+        if (!chiuso) { chiuso = true; resolve(res); }
+      }).catch(() => {
+        clearTimeout(timer);
+        daCache().then(h => { if (!chiuso) { chiuso = true;
+          resolve(h || new Response("Offline e nessuna copia salvata.", {status: 503})); } });
+      });
+    }));
+    return;
+  }
+
+  // icone, manifest e il resto: prima la cache, aggiornamento in background
   e.respondWith(
-    caches.match(e.request).then(hit => {
-      const net = fetch(e.request).then(res => {
+    caches.match(req).then(hit => {
+      const net = fetch(req).then(res => {
         if (res && res.status === 200 && res.type === "basic") {
-          const copy = res.clone();
-          caches.open(CACHE).then(c => c.put(e.request, copy));
+          const copia = res.clone();
+          caches.open(CACHE).then(c => c.put(req, copia));
         }
         return res;
       }).catch(() => hit);
-      return hit || net;   // prima la cache: parte anche in aereo
+      return hit || net;
     })
   );
 });
